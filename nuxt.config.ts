@@ -2,7 +2,15 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-
+  googleFonts: {
+    families: {
+      Sarabun: [400, 700],
+      Inter: [400, 700], 
+      Kanit: [400, 700], 
+      Prompt: [400, 700], 
+    },
+    display: 'swap',
+  },
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -10,5 +18,9 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxtjs/tailwindcss' , "@prisma/nuxt"],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    "@prisma/nuxt",
+    '@nuxtjs/google-fonts',
+  ],
 })

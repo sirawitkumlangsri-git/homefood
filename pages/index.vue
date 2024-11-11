@@ -1,9 +1,9 @@
 <script setup>
-
+import userLayouts from '~/layouts/userLayouts.vue';
 </script>
 
 <template>
-    <h1 class="text-red-200">
+    <userLayouts>
         asdasd
-    </h1>
+    </userLayouts>
 </template>
