@@ -1,0 +1,1 @@
+import a from"./CwSQbgx5.js";import{J as e,A as o,t as r,B as s}from"./CODT8Sdm.js";import".prisma/client/index-browser";const u={__name:"index",setup(n){return(m,t)=>(r(),e(a,null,{default:o(()=>t[0]||(t[0]=[s(" asdasd ")])),_:1}))}};export{u as default};

@@ -1,8 +1,8 @@
 import { defineComponent, onErrorCaptured, createVNode } from 'vue';
-import { i as injectHead, c as createError } from './server.mjs';
-import '../nitro/nitro.mjs';
+import { i as injectHead, f as createError } from './server.mjs';
 import 'node:http';
 import 'node:https';
+import '../nitro/nitro.mjs';
 import 'node:fs';
 import 'node:path';
 import 'node:url';

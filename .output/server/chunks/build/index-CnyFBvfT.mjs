@@ -1,0 +1,192 @@
+import { useSSRContext, resolveComponent, withCtx, openBlock, createBlock, createVNode, unref, mergeProps, ref } from 'vue';
+import { ssrRenderComponent, ssrRenderAttrs, ssrRenderList, ssrRenderAttr, ssrInterpolate, ssrRenderClass } from 'vue/server-renderer';
+import { _ as _sfc_main$3 } from './userLayouts-BJkq_7Dv.mjs';
+import { S as Search } from './Search-CVdpZGFx.mjs';
+import { _ as _export_sfc } from './server.mjs';
+import './Menu-D0p1tXCo.mjs';
+import '../routes/renderer.mjs';
+import 'vue-bundle-renderer/runtime';
+import '../nitro/nitro.mjs';
+import 'node:http';
+import 'node:https';
+import 'node:fs';
+import 'node:path';
+import 'node:url';
+import 'devalue';
+import '@unhead/ssr';
+import 'unhead';
+import '@unhead/shared';
+import '@heroicons/vue/24/solid';
+import 'vue-router';
+import '@prisma/client';
+import '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/vue-fontawesome';
+import '@fortawesome/free-solid-svg-icons';
+
+const _sfc_main$2 = {
+  __name: "shopCategories",
+  __ssrInlineRender: true,
+  setup(__props) {
+    const shopCategorires = [
+      { src: "/shopCategory/shop1.png", name: "\u0E40\u0E27\u0E0A\u0E20\u0E31\u0E13\u0E11\u0E4C" },
+      { src: "/shopCategory/shop2.png", name: "\u0E02\u0E2D\u0E07\u0E0A\u0E33" },
+      { src: "/shopCategory/shop3.png", name: "\u0E1C\u0E25\u0E34\u0E15\u0E20\u0E31\u0E13\u0E11\u0E4C \u0E04\u0E27\u0E32\u0E21\u0E07\u0E32\u0E21" },
+      { src: "/shopCategory/shop4.png", name: "\u0E41\u0E1F\u0E0A\u0E31\u0E48\u0E19" },
+      { src: "/shopCategory/shop5.png", name: "\u0E2D\u0E38\u0E1B\u0E01\u0E23\u0E13\u0E4C \u0E44\u0E1F\u0E1F\u0E49\u0E32" },
+      { src: "/shopCategory/shop6.png", name: "\u0E1C\u0E25\u0E34\u0E15\u0E20\u0E31\u0E13\u0E11\u0E4C \u0E2A\u0E38\u0E02\u0E20\u0E32\u0E1E" },
+      { src: "/shopCategory/shop7.png", name: "\u0E02\u0E2D\u0E07\u0E02\u0E27\u0E31\u0E0D" },
+      { src: "/shopCategory/shop8.png", name: "\u0E02\u0E2D\u0E07\u0E40\u0E25\u0E48\u0E19 \u0E40\u0E01\u0E21\u0E2A\u0E4C" },
+      { src: "/shopCategory/shop9.png", name: "\u0E40\u0E04\u0E23\u0E37\u0E48\u0E2D\u0E07\u0E40\u0E02\u0E35\u0E22\u0E19" },
+      { src: "/shopCategory/shop10.png", name: "\u0E1C\u0E25\u0E34\u0E15\u0E20\u0E31\u0E13\u0E11\u0E4C \u0E08\u0E32\u0E01\u0E19\u0E21" },
+      { src: "/shopCategory/shop11.png", name: "\u0E41\u0E21\u0E48\u0E41\u0E25\u0E30\u0E40\u0E14\u0E47\u0E01" },
+      { src: "/shopCategory/shop12.png", name: "\u0E27\u0E31\u0E15\u0E16\u0E38\u0E14\u0E34\u0E1A   \u0E17\u0E33\u0E2D\u0E32\u0E2B\u0E32\u0E23" },
+      { src: "/shopCategory/shop13.png", name: "\u0E2D\u0E32\u0E2B\u0E32\u0E23\u0E2A\u0E14" },
+      { src: "/shopCategory/shop14.png", name: "\u0E2D\u0E32\u0E2B\u0E32\u0E23\u0E41\u0E2B\u0E49\u0E07" },
+      { src: "/shopCategory/shop15.png", name: "\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E2A\u0E31\u0E15\u0E27\u0E4C" },
+      { src: "/shopCategory/shop16.png", name: "\u0E2D\u0E32\u0E2B\u0E32\u0E23\u0E41\u0E0A\u0E48\u0E41\u0E02\u0E47\u0E07" },
+      { src: "/shopCategory/shop17.png", name: "\u0E2D\u0E38\u0E1B\u0E01\u0E23\u0E13\u0E4C\u0E01\u0E35\u0E2C\u0E32" },
+      { src: "/shopCategory/shop18.png", name: "\u0E2D\u0E38\u0E1B\u0E01\u0E23\u0E13\u0E4C\u0E44\u0E2B\u0E27\u0E49\u0E1E\u0E23\u0E30" },
+      { src: "/shopCategory/shop19.png", name: "\u0E14\u0E2D\u0E01\u0E44\u0E21\u0E49\u0E15\u0E49\u0E19\u0E44\u0E21\u0E49" },
+      { src: "/shopCategory/shop20.png", name: "\u0E2A\u0E34\u0E19\u0E04\u0E49\u0E32\u0E2A\u0E31\u0E15\u0E27\u0E4C\u0E40\u0E25\u0E35\u0E49\u0E22\u0E07" }
+    ];
+    return (_ctx, _push, _parent, _attrs) => {
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "p-5" }, _attrs))} data-v-bf18f0fd><div data-v-bf18f0fd><h2 class="text-xl mt-5 font-bold" data-v-bf18f0fd>\u0E2B\u0E21\u0E27\u0E14\u0E2B\u0E21\u0E39\u0E48\u0E2A\u0E34\u0E19\u0E04\u0E49\u0E32\u0E41\u0E19\u0E30\u0E19\u0E33</h2></div><div class="mt-5 overflow-x-auto whitespace-nowrap" data-v-bf18f0fd><div class="grid grid-rows-2 gap-2 grid-flow-col auto-cols-max" data-v-bf18f0fd><!--[-->`);
+      ssrRenderList(shopCategorires, (shop) => {
+        _push(`<div class="sm:w-[115px] sm:h-[125px] w-[81px] h-[91px] bg-white shadow-md rounded-xl flex items-center justify-center mt-2 mb-2" data-v-bf18f0fd><div class="flex flex-col text-center" data-v-bf18f0fd><div class="flex justify-center" data-v-bf18f0fd><img${ssrRenderAttr("src", shop.src)}${ssrRenderAttr("alt", shop.name)} class="w-[34px] h-[34px]" data-v-bf18f0fd></div><div class="flex justify-center mt-2" data-v-bf18f0fd><h2 class="text-[14px] break-words" data-v-bf18f0fd>${ssrInterpolate(shop.name)}</h2></div></div></div>`);
+      });
+      _push(`<!--]--></div></div></div>`);
+    };
+  }
+};
+const _sfc_setup$2 = _sfc_main$2.setup;
+_sfc_main$2.setup = (props, ctx) => {
+  const ssrContext = useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/user/shopCategories.vue");
+  return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
+};
+const shopCategories = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-bf18f0fd"]]);
+const _sfc_main$1 = {
+  __name: "ShopNear",
+  __ssrInlineRender: true,
+  setup(__props) {
+    const activeSection = ref("open");
+    const shopnear = [
+      { src: "/user/shops/near/shops1.png", name: "\u0E23\u0E49\u0E32\u0E19\u0E02\u0E32\u0E22\u0E22\u0E32", rate: 4.9, distance: 500, shopcost: 5 },
+      { src: "/user/shops/near/shops2.png", name: "\u0E23\u0E49\u0E32\u0E19\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E2A\u0E14\u0E43\u0E2B\u0E21\u0E48", rate: 4.9, distance: 800, shopcost: 10 },
+      { src: "/user/shops/near/shops3.png", name: "\u0E1C\u0E25\u0E44\u0E21\u0E49\u0E2A\u0E14\u0E41\u0E21\u0E48\u0E43\u0E08", rate: 4.9, distance: 600, shopcost: 15 },
+      { src: "/user/shops/near/shops4.png", name: "\u0E02\u0E2D\u0E07\u0E2A\u0E14\u0E1E\u0E35\u0E48\u0E1A\u0E31\u0E27", rate: 4.9, distance: 610, shopcost: 20 }
+    ];
+    return (_ctx, _push, _parent, _attrs) => {
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "p-5" }, _attrs))}><div><p class="text-xl font-bold">\u0E23\u0E49\u0E32\u0E19\u0E04\u0E49\u0E32\u0E43\u0E01\u0E25\u0E49\u0E04\u0E38\u0E13</p></div><div class="flex mt-7"><div class="flex-1 flex flex-col cursor-pointer"><div class="flex justify-center"><h2 class="${ssrRenderClass({
+        "text-[#FF6347]": activeSection.value === "open",
+        "": activeSection.value !== "open"
+      })}">\u0E40\u0E1B\u0E34\u0E14\u0E2D\u0E22\u0E39\u0E48</h2></div><div class="${ssrRenderClass({
+        "border-[2px] border-[#FF6347] mt-1": activeSection.value === "open",
+        "border-[1px] mt-1": activeSection.value !== "open"
+      })}"></div></div><div class="flex-1 flex flex-col cursor-pointer"><div class="flex justify-center"><h2 class="${ssrRenderClass({
+        "": activeSection.value === "open",
+        "text-[#FF6347]": activeSection.value !== "open"
+      })}">\u0E42\u0E1B\u0E23\u0E42\u0E21\u0E0A\u0E31\u0E48\u0E19</h2></div><div class="${ssrRenderClass({
+        "border-[1px] mt-1 ": activeSection.value === "open",
+        "border-[2px] border-[#FF6347] mt-1": activeSection.value !== "open"
+      })}"></div></div></div>`);
+      if (activeSection.value === "open") {
+        _push(`<div class="mt-3"><!--[-->`);
+        ssrRenderList(shopnear, (shop) => {
+          _push(`<div><div class="w-full sm:h-[140px] h-[70px] mt-2 flex"><div><img${ssrRenderAttr("src", shop.src)}${ssrRenderAttr("alt", shop.name)} class="sm:w-[134px] sm:h-[134px] w-[60px] h-[60px] object-cover rounded-md"></div><div class="flex w-full"><div class="mx-4 flex flex-col"><div><h2 class="text-base sm:text-xl">${ssrInterpolate(shop.name)}</h2></div><div class="flex sm:mt-2"><svg class="mt-1" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.33943 3.15497C6.07831 1.82949 6.44774 1.16675 7.00008 1.16675C7.55242 1.16675 7.92186 1.82949 8.66074 3.15497L8.85189 3.49788C9.06186 3.87454 9.16684 4.06287 9.33053 4.18714C9.49422 4.3114 9.69808 4.35752 10.1058 4.44978L10.477 4.53376C11.9118 4.85841 12.6292 5.02073 12.7999 5.56959C12.9706 6.11846 12.4815 6.69037 11.5034 7.8342L11.2503 8.13013C10.9723 8.45517 10.8334 8.61769 10.7708 8.81875C10.7083 9.01981 10.7293 9.23665 10.7713 9.67032L10.8096 10.0651C10.9575 11.5913 11.0314 12.3543 10.5846 12.6935C10.1377 13.0328 9.46602 12.7235 8.12261 12.1049L7.77505 11.9449C7.39329 11.7691 7.20241 11.6812 7.00008 11.6812C6.79775 11.6812 6.60687 11.7691 6.22512 11.9449L5.87756 12.1049C4.53414 12.7235 3.86243 13.0328 3.41558 12.6935C2.96874 12.3543 3.04268 11.5913 3.19056 10.0651L3.22882 9.67032C3.27085 9.23665 3.29186 9.01981 3.22933 8.81875C3.16681 8.61769 3.02783 8.45517 2.74987 8.13013L2.4968 7.8342C1.51864 6.69037 1.02956 6.11846 1.20024 5.56959C1.37092 5.02073 2.08833 4.85841 3.52314 4.53376L3.89435 4.44978C4.30208 4.35752 4.50594 4.3114 4.66963 4.18714C4.83332 4.06287 4.9383 3.87454 5.14827 3.49788L5.33943 3.15497Z" fill="#FFC700"></path></svg><h2 class="mx-1 text-[#8D92A3] text-base sm:text-xl">${ssrInterpolate(shop.rate)} | </h2><h2 class="text-[#8D92A3] text-base sm:text-xl">${ssrInterpolate(shop.distance)} m</h2></div></div><div class="flex-1 flex item w-full justify-center sm:justify-end sm:mx-10"><div class="sm:w-[100px] sm:h-8 w-[66px] h-6 rounded-2xl bg-red-200 flex justify-center items-center mt-3"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="13.3333" y="10.8333" width="5" height="5" rx="2.5" stroke="#FF826C" stroke-width="1.5"></rect><path d="M9.16675 13.3333V12.0833C9.16675 10.512 9.16675 9.72631 8.67859 9.23816C8.19044 8.75 7.40476 8.75 5.83341 8.75H5.33341C5.02388 8.75 4.86911 8.75 4.73855 8.76028C3.10396 8.88892 1.80567 10.1872 1.67702 11.8218C1.66675 11.9524 1.66675 12.1071 1.66675 12.4167C1.66675 12.4941 1.66675 12.5327 1.66932 12.5654C1.70148 12.974 2.02605 13.2986 2.4347 13.3308C2.46734 13.3333 2.50603 13.3333 2.58341 13.3333H9.16675ZM9.16675 13.3333H13.3334" stroke="#FF826C" stroke-width="1.5" stroke-linecap="round"></path><path d="M7.91675 13.3333C7.91675 14.714 6.79746 15.8333 5.41675 15.8333C4.03604 15.8333 2.91675 14.714 2.91675 13.3333" stroke="#FF826C" stroke-width="1.5" stroke-linecap="round"></path><path d="M10 4.16675H10.4399C11.4422 4.16675 11.9434 4.16675 12.3462 4.41566C12.7489 4.66458 12.973 5.11284 13.4213 6.00937L15.8333 10.8334" stroke="#FF826C" stroke-width="1.5" stroke-linecap="round"></path><path d="M15.1188 9.16667L15.6869 8.74816C15.906 8.58679 16.0155 8.5061 16.0916 8.40092C16.1435 8.32933 16.1836 8.24995 16.2105 8.16575C16.25 8.04205 16.25 7.90601 16.25 7.63394C16.25 7.1194 16.25 6.86213 16.1403 6.67004C16.0664 6.54073 15.9593 6.43357 15.83 6.35971C15.6379 6.25 15.3806 6.25 14.8661 6.25H13.75" stroke="#FF826C" stroke-width="1.5" stroke-linecap="round"></path><circle cx="15.8333" cy="13.3333" r="2.5" stroke="#FF826C" stroke-width="1.5"></circle></svg><h2 class="mx-1 text-[#6D6C69] text-base sm:text-xl">\u0E3F${ssrInterpolate(shop.shopcost)}</h2></div></div></div></div></div>`);
+        });
+        _push(`<!--]--></div>`);
+      } else {
+        _push(`<!---->`);
+      }
+      if (activeSection.value === "promotion") {
+        _push(`<div class="mt-3"><div class="text-center"><h2>\u0E42\u0E1B\u0E23\u0E42\u0E21\u0E0A\u0E31\u0E48\u0E19\u0E08\u0E30\u0E21\u0E32\u0E40\u0E23\u0E47\u0E27\u0E46 \u0E19\u0E35\u0E49</h2></div></div>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`</div>`);
+    };
+  }
+};
+const _sfc_setup$1 = _sfc_main$1.setup;
+_sfc_main$1.setup = (props, ctx) => {
+  const ssrContext = useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/user/ShopNear.vue");
+  return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
+};
+const _sfc_main = {
+  __name: "index",
+  __ssrInlineRender: true,
+  setup(__props) {
+    return (_ctx, _push, _parent, _attrs) => {
+      const _component_RouterLink = resolveComponent("RouterLink");
+      _push(`<!--[--><div class="p-4 flex font-prompt mx-auto max-w-7xl mt-6" data-v-60ce04de>`);
+      _push(ssrRenderComponent(_component_RouterLink, {
+        to: "/",
+        class: "flex-2 w-[42px] h-[42px] bg-white shadow-md rounded-full flex justify-center items-center"
+      }, {
+        default: withCtx((_, _push2, _parent2, _scopeId) => {
+          if (_push2) {
+            _push2(`<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" data-v-60ce04de${_scopeId}><path fill-rule="evenodd" clip-rule="evenodd" d="M11.4078 5.92548C11.7251 6.24278 11.7251 6.75722 11.4078 7.07452L6.2948 12.1875H21.6666C22.1153 12.1875 22.4791 12.5513 22.4791 13C22.4791 13.4487 22.1153 13.8125 21.6666 13.8125H6.2948L11.4078 18.9255C11.7251 19.2428 11.7251 19.7572 11.4078 20.0745C11.0905 20.3918 10.576 20.3918 10.2587 20.0745L3.75873 13.5745C3.44143 13.2572 3.44143 12.7428 3.75873 12.4255L10.2587 5.92548C10.576 5.60817 11.0905 5.60817 11.4078 5.92548Z" fill="#0D1217" data-v-60ce04de${_scopeId}></path></svg>`);
+          } else {
+            return [
+              (openBlock(), createBlock("svg", {
+                width: "26",
+                height: "26",
+                viewBox: "0 0 26 26",
+                fill: "none",
+                xmlns: "http://www.w3.org/2000/svg"
+              }, [
+                createVNode("path", {
+                  "fill-rule": "evenodd",
+                  "clip-rule": "evenodd",
+                  d: "M11.4078 5.92548C11.7251 6.24278 11.7251 6.75722 11.4078 7.07452L6.2948 12.1875H21.6666C22.1153 12.1875 22.4791 12.5513 22.4791 13C22.4791 13.4487 22.1153 13.8125 21.6666 13.8125H6.2948L11.4078 18.9255C11.7251 19.2428 11.7251 19.7572 11.4078 20.0745C11.0905 20.3918 10.576 20.3918 10.2587 20.0745L3.75873 13.5745C3.44143 13.2572 3.44143 12.7428 3.75873 12.4255L10.2587 5.92548C10.576 5.60817 11.0905 5.60817 11.4078 5.92548Z",
+                  fill: "#0D1217"
+                })
+              ]))
+            ];
+          }
+        }),
+        _: 1
+      }, _parent));
+      _push(`<div class="flex-1 mt-2" data-v-60ce04de><h2 class="text-3xl mx-16 font-bold" data-v-60ce04de>\u0E2A\u0E31\u0E48\u0E07\u0E2A\u0E34\u0E19\u0E04\u0E49\u0E32</h2></div></div>`);
+      _push(ssrRenderComponent(_sfc_main$3, { class: "font-prompt" }, {
+        default: withCtx((_, _push2, _parent2, _scopeId) => {
+          if (_push2) {
+            _push2(`<div class="" data-v-60ce04de${_scopeId}>`);
+            _push2(ssrRenderComponent(unref(Search), null, null, _parent2, _scopeId));
+            _push2(`</div><div data-v-60ce04de${_scopeId}>`);
+            _push2(ssrRenderComponent(unref(shopCategories), null, null, _parent2, _scopeId));
+            _push2(`</div><div data-v-60ce04de${_scopeId}>`);
+            _push2(ssrRenderComponent(unref(_sfc_main$1), null, null, _parent2, _scopeId));
+            _push2(`</div>`);
+          } else {
+            return [
+              createVNode("div", { class: "" }, [
+                createVNode(unref(Search))
+              ]),
+              createVNode("div", null, [
+                createVNode(unref(shopCategories))
+              ]),
+              createVNode("div", null, [
+                createVNode(unref(_sfc_main$1))
+              ])
+            ];
+          }
+        }),
+        _: 1
+      }, _parent));
+      _push(`<!--]-->`);
+    };
+  }
+};
+const _sfc_setup = _sfc_main.setup;
+_sfc_main.setup = (props, ctx) => {
+  const ssrContext = useSSRContext();
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/ordershop/index.vue");
+  return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
+};
+const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-60ce04de"]]);
+
+export { index as default };
+//# sourceMappingURL=index-CnyFBvfT.mjs.map
