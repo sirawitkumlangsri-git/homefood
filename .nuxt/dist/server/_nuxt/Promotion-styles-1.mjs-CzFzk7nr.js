@@ -1,0 +1,5 @@
+const Promotion_vue_vue_type_style_index_0_scoped_ff626e50_lang = ".promotion-container[data-v-ff626e50]{display:flex;flex-wrap:nowrap;overflow-x:auto}.promotion-background[data-v-ff626e50]{background:linear-gradient(264.34deg,#fddea7 1.36%,#fab53c 102.1%)}.promotion-background[data-v-ff626e50],.promotion-background-2[data-v-ff626e50]{color:#333;overflow:hidden;padding:20px;position:relative}.promotion-background-2[data-v-ff626e50]{background-image:url(" + __buildAssetsURL("photo-2-Photoroom.C2PJylzr.png") + ");background-position:50%;background-size:cover}.promotion-background-3[data-v-ff626e50]{background:linear-gradient(264.34deg,#095c47 1.36%,#13c296 102.1%);color:#333;overflow:hidden;padding:20px;position:relative}.font-prompt[data-v-ff626e50]{font-family:Prompt,sans-serif}.carousel-container[data-v-ff626e50]{position:relative;width:100%}.carousel-inner[data-v-ff626e50]{display:flex;width:400%}.promotion-container[data-v-ff626e50]{width:100%}.dot[data-v-ff626e50]{transition:background-color .3s}";
+export {
+  Promotion_vue_vue_type_style_index_0_scoped_ff626e50_lang as default
+};
+//# sourceMappingURL=Promotion-styles-1.mjs-CzFzk7nr.js.map

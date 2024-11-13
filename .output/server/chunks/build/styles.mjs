@@ -1,0 +1,43 @@
+const interopDefault = r => r.default || r || [];
+const styles = {
+  "node_modules/nuxt/dist/app/entry.js": () => import('./entry-styles.CXGxwMe3.mjs').then(interopDefault),
+  "pages/index.vue": () => import('./index-styles.CW2oju2O.mjs').then(interopDefault),
+  "pages/orderfood/index.vue": () => import('./index-styles.BvwHqma7.mjs').then(interopDefault),
+  "pages/index.vue?vue&type=style&index=0&scoped=6f2b08d5&lang.css": () => import('./index-styles.C2JevrkL.mjs').then(interopDefault),
+  "pages/orderfood/index.vue?vue&type=style&index=0&scoped=d7a83d7f&lang.css": () => import('./index-styles.BrpCxHcq.mjs').then(interopDefault),
+  "pages/ordershop/index.vue": () => import('./index-styles.CZoJdd6m.mjs').then(interopDefault),
+  "pages/packet/index.vue": () => import('./index-styles.B-cqGTVL.mjs').then(interopDefault),
+  "pages/productsale/index.vue": () => import('./index-styles.DFSgxszI.mjs').then(interopDefault),
+  "pages/recommendedshops/index.vue": () => import('./index-styles.B9iSyazH.mjs').then(interopDefault),
+  "pages/ordershop/index.vue?vue&type=style&index=0&scoped=60ce04de&lang.css": () => import('./index-styles.DDMUa4MZ.mjs').then(interopDefault),
+  "pages/packet/index.vue?vue&type=style&index=0&scoped=bed23953&lang.css": () => import('./index-styles.BOwlURjS.mjs').then(interopDefault),
+  "node_modules/nuxt/dist/app/components/error-500.vue": () => import('./error-500-styles.DPP87-Dp.mjs').then(interopDefault),
+  "pages/productsale/index.vue?vue&type=style&index=0&scoped=666f769b&lang.css": () => import('./index-styles.CoWmyXGl.mjs').then(interopDefault),
+  "pages/recommendedshops/index.vue?vue&type=style&index=0&scoped=3913467e&lang.css": () => import('./index-styles.DTITBfB_.mjs').then(interopDefault),
+  "node_modules/nuxt/dist/app/components/error-404.vue": () => import('./error-404-styles.BcoFjqgl.mjs').then(interopDefault),
+  "components/user/Search.vue": () => import('./Search-styles.CJDVGmvF.mjs').then(interopDefault),
+  "layouts/adminLayouts.vue": () => import('./adminLayouts-styles.IwQSKATL.mjs').then(interopDefault),
+  "components/user/ProductSale.vue": () => import('./ProductSale-styles.ruJM6JHy.mjs').then(interopDefault),
+  "components/user/RecommendedShops.vue": () => import('./RecommendedShops-styles.ByE3r8JR.mjs').then(interopDefault),
+  "components/user/DiscountCoupon.vue": () => import('./DiscountCoupon-styles.CJBO20nN.mjs').then(interopDefault),
+  "components/user/Promotion.vue": () => import('./Promotion-styles.DpOttBlI.mjs').then(interopDefault),
+  "components/user/foodCategories.vue": () => import('./foodCategories-styles.COXG7XUn.mjs').then(interopDefault),
+  "components/user/Search.vue?vue&type=style&index=0&scoped=9ffbf119&lang.css": () => import('./Search-styles.91xHupGC.mjs').then(interopDefault),
+  "layouts/adminLayouts.vue?vue&type=style&index=0&scoped=c18ccce1&lang.css": () => import('./adminLayouts-styles.vQetyuPY.mjs').then(interopDefault),
+  "components/user/ProductSale.vue?vue&type=style&index=0&scoped=36969a0f&lang.css": () => import('./ProductSale-styles.Cjlpbv7B.mjs').then(interopDefault),
+  "components/user/RecommendedShops.vue?vue&type=style&index=0&scoped=4330c36a&lang.css": () => import('./RecommendedShops-styles.WMUyyzbr.mjs').then(interopDefault),
+  "components/user/DiscountCoupon.vue?vue&type=style&index=0&scoped=8ab88f55&lang.css": () => import('./DiscountCoupon-styles.BvCPfERM.mjs').then(interopDefault),
+  "components/user/foodCategories.vue?vue&type=style&index=0&scoped=4692a7c7&lang.css": () => import('./foodCategories-styles.Ds8d1eVi.mjs').then(interopDefault),
+  "components/user/shopCategories.vue": () => import('./shopCategories-styles.hp1TZ6FP.mjs').then(interopDefault),
+  "components/user/Packet.vue": () => import('./Packet-styles.9ZLj8D6n.mjs').then(interopDefault),
+  "node_modules/nuxt/dist/app/components/error-500.vue?vue&type=style&index=0&scoped=f7ad9679&lang.css": () => import('./error-500-styles.DqmriZ_b.mjs').then(interopDefault),
+  "components/user/shopCategories.vue?vue&type=style&index=0&scoped=bf18f0fd&lang.css": () => import('./shopCategories-styles.BUbLSBj-.mjs').then(interopDefault),
+  "components/user/Packet.vue?vue&type=style&index=0&scoped=bbc9797a&lang.css": () => import('./Packet-styles.C4rvljFY.mjs').then(interopDefault),
+  "components/user/Navbar.vue": () => import('./Navbar-styles.B1SRJj0Z.mjs').then(interopDefault),
+  "node_modules/nuxt/dist/app/components/error-404.vue?vue&type=style&index=0&scoped=00b6b518&lang.css": () => import('./error-404-styles.DRLC0U6S.mjs').then(interopDefault),
+  "components/user/Navbar.vue?vue&type=style&index=0&scoped=e6eab0e5&lang.css": () => import('./Navbar-styles.Ti_OA0Og.mjs').then(interopDefault),
+  "components/user/Promotion.vue?vue&type=style&index=0&scoped=ff626e50&lang.css": () => import('./Promotion-styles.DgLd2hl0.mjs').then(interopDefault)
+};
+
+export { styles as default };
+//# sourceMappingURL=styles.mjs.map
