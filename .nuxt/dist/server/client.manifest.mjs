@@ -1,1 +1,1 @@
-export { default } from "file:///Users/sirawitkumlungsri/Documents/GitHub/homefood/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
+export { default } from "file:///C:/Users/xctxc/OneDrive/%E0%B9%80%E0%B8%94%E0%B8%AA%E0%B8%81%E0%B9%8C%E0%B8%97%E0%B9%87%E0%B8%AD%E0%B8%9B/term_2_project/homefood/node_modules/@nuxt/vite-builder/dist/runtime/client.manifest.mjs"
