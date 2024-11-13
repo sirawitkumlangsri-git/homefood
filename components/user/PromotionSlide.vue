@@ -1,10 +1,28 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+
+const currentSlide = ref(0);
+const totalSlides = 4;
+
+const nextSlide = () => {
+    currentSlide.value = (currentSlide.value + 1) % totalSlides;
+};
+
+let slideInterval;
+
+onMounted(() => {
+    slideInterval = setInterval(nextSlide, 3000);
+});
+
+onBeforeUnmount(() => {
+    clearInterval(slideInterval);
+});
 </script>
 
 <template>
     <div class="carousel-container overflow-hidden relative sm:hidden">
-        <div class="flex transition-transform duration-500 ease-in-out">
+        <div class="carousel-inner flex transition-transform duration-500 ease-in-out"
+            :style="{ transform: `translateX(-${currentSlide * 18.3}%)` }">
             <div class="promotion-container flex space-x-4 p-4">
                 <div class="flex gap-5">
                     <!-- Box1 -->
@@ -212,12 +230,10 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 .carousel-inner {
     display: flex;
     width: 400%;
-    /* Total width based on the number of slides */
 }
 
 .promotion-container {
     width: 100%;
-    /* Each slide takes full width */
 }
 
 .dot {

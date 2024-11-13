@@ -4,16 +4,33 @@ import Search from '~/components/user/Search'
 import RecommendedShops from '~/components/user/RecommendedShops.vue'
 import ProductSale from '~/components/user/ProductSale.vue'
 import Promotion from '~/components/user/Promotion.vue'
+import PromotionSlide from '~/components/user/PromotionSlide.vue'
 import DiscountCoupon from '~/components/user/DiscountCoupon.vue'
+
+const isDesktop = ref(false)
+
+function handleResize() {
+    isDesktop.value = window.innerWidth >= 640
+}
+
+onMounted(() => {
+    handleResize()
+    window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+})
 </script>
 
 <template>
     <userLayouts>
         <div class="sm:mx-3 mx-0">
-            <Promotion />
+            <Promotion v-if="isDesktop" />
+            <PromotionSlide v-else />
         </div>
         <div class="mt-5 ">
-            <Search/>
+            <Search />
         </div>
 
         <div class="flex justify-center">
