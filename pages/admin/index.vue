@@ -1,8 +1,10 @@
 <script setup>
-
+import adminLayouts from '~/layouts/adminLayouts.vue'
 </script>
 
 <template>
-<h1>h1</h1>  
+    <adminLayouts>
+        asdasd
+    </adminLayouts>
 
 </template>
