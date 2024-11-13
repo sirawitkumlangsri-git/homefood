@@ -1,0 +1,5 @@
+const PromotionSlide_vue_vue_type_style_index_0_scoped_8c6eff6e_lang = ".promotion-container[data-v-8c6eff6e]{display:flex;flex-wrap:nowrap;overflow-x:auto}.promotion-background[data-v-8c6eff6e]{background:linear-gradient(264.34deg,#fddea7 1.36%,#fab53c 102.1%)}.promotion-background[data-v-8c6eff6e],.promotion-background-2[data-v-8c6eff6e]{color:#333;overflow:hidden;padding:20px;position:relative}.promotion-background-2[data-v-8c6eff6e]{background-image:url(" + __buildAssetsURL("photo-2-Photoroom.C2PJylzr.png") + ");background-position:50%;background-size:cover}.promotion-background-3[data-v-8c6eff6e]{background:linear-gradient(264.34deg,#095c47 1.36%,#13c296 102.1%);color:#333;overflow:hidden;padding:20px;position:relative}.font-prompt[data-v-8c6eff6e]{font-family:Prompt,sans-serif}.carousel-container[data-v-8c6eff6e]{position:relative;width:100%}.carousel-inner[data-v-8c6eff6e]{display:flex;width:400%}.promotion-container[data-v-8c6eff6e]{width:100%}.dot[data-v-8c6eff6e]{transition:background-color .3s}";
+export {
+  PromotionSlide_vue_vue_type_style_index_0_scoped_8c6eff6e_lang as default
+};
+//# sourceMappingURL=PromotionSlide-styles-1.mjs-DgQs653H.js.map
