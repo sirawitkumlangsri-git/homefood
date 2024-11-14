@@ -1,7 +1,6 @@
-import { d as defineEventHandler, r as readBody, c as createError } from '../../../_/index.mjs';
+import { d as defineEventHandler, r as readBody, c as createError } from '../../../nitro/nitro.mjs';
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
-import '../../../nitro/nitro.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:fs';

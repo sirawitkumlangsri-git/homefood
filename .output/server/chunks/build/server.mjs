@@ -1,909 +1,23 @@
 import { hasInjectionContext, inject, version, unref, defineComponent, provide, shallowReactive, h, ref, watch, Suspense, nextTick, Fragment, Transition, getCurrentInstance, useSSRContext, createApp, effectScope, reactive, getCurrentScope, defineAsyncComponent, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, toRef, mergeProps, shallowRef, isReadonly, toRaw, isRef, isShallow, isReactive } from 'vue';
-import http from 'node:http';
-import https from 'node:https';
-import { i as destr, k as defu } from '../nitro/nitro.mjs';
-import { w as withBase, a as withQuery, h as hasProtocol, i as isScriptProtocol, j as joinURL, c as createError$1, b as sanitizeStatusCode } from '../_/index.mjs';
+import { $ as $fetch, k as hasProtocol, l as isScriptProtocol, m as joinURL, w as withQuery, c as createError$1, n as defu, o as sanitizeStatusCode, p as getContext, q as createHooks, t as toRouteMatcher, v as createRouter$1 } from '../nitro/nitro.mjs';
 import { b as baseURL } from '../routes/renderer.mjs';
 import { createPinia, setActivePinia, shouldHydrate } from 'pinia';
-import { defineHeadPlugin, composableNames } from '@unhead/shared';
 import { getActiveHead, CapoPlugin } from 'unhead';
-import { RouterView, createMemoryHistory, createRouter as createRouter$1, START_LOCATION } from 'vue-router';
+import { defineHeadPlugin } from '@unhead/shared';
+import { RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { PrismaClient } from '@prisma/client';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUser, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import { ssrRenderSuspense, ssrRenderComponent, ssrRenderVNode, ssrRenderAttrs } from 'vue/server-renderer';
+import 'node:http';
+import 'node:https';
 import 'node:fs';
 import 'node:path';
 import 'node:url';
 import 'vue-bundle-renderer/runtime';
 import 'devalue';
 import '@unhead/ssr';
-
-const NODE_TYPES = {
-  NORMAL: 0,
-  WILDCARD: 1,
-  PLACEHOLDER: 2
-};
-
-function createRouter(options = {}) {
-  const ctx = {
-    options,
-    rootNode: createRadixNode(),
-    staticRoutesMap: {}
-  };
-  const normalizeTrailingSlash = (p) => options.strictTrailingSlash ? p : p.replace(/\/$/, "") || "/";
-  if (options.routes) {
-    for (const path in options.routes) {
-      insert(ctx, normalizeTrailingSlash(path), options.routes[path]);
-    }
-  }
-  return {
-    ctx,
-    lookup: (path) => lookup(ctx, normalizeTrailingSlash(path)),
-    insert: (path, data) => insert(ctx, normalizeTrailingSlash(path), data),
-    remove: (path) => remove(ctx, normalizeTrailingSlash(path))
-  };
-}
-function lookup(ctx, path) {
-  const staticPathNode = ctx.staticRoutesMap[path];
-  if (staticPathNode) {
-    return staticPathNode.data;
-  }
-  const sections = path.split("/");
-  const params = {};
-  let paramsFound = false;
-  let wildcardNode = null;
-  let node = ctx.rootNode;
-  let wildCardParam = null;
-  for (let i = 0; i < sections.length; i++) {
-    const section = sections[i];
-    if (node.wildcardChildNode !== null) {
-      wildcardNode = node.wildcardChildNode;
-      wildCardParam = sections.slice(i).join("/");
-    }
-    const nextNode = node.children.get(section);
-    if (nextNode === void 0) {
-      if (node && node.placeholderChildren.length > 1) {
-        const remaining = sections.length - i;
-        node = node.placeholderChildren.find((c) => c.maxDepth === remaining) || null;
-      } else {
-        node = node.placeholderChildren[0] || null;
-      }
-      if (!node) {
-        break;
-      }
-      if (node.paramName) {
-        params[node.paramName] = section;
-      }
-      paramsFound = true;
-    } else {
-      node = nextNode;
-    }
-  }
-  if ((node === null || node.data === null) && wildcardNode !== null) {
-    node = wildcardNode;
-    params[node.paramName || "_"] = wildCardParam;
-    paramsFound = true;
-  }
-  if (!node) {
-    return null;
-  }
-  if (paramsFound) {
-    return {
-      ...node.data,
-      params: paramsFound ? params : void 0
-    };
-  }
-  return node.data;
-}
-function insert(ctx, path, data) {
-  let isStaticRoute = true;
-  const sections = path.split("/");
-  let node = ctx.rootNode;
-  let _unnamedPlaceholderCtr = 0;
-  const matchedNodes = [node];
-  for (const section of sections) {
-    let childNode;
-    if (childNode = node.children.get(section)) {
-      node = childNode;
-    } else {
-      const type = getNodeType(section);
-      childNode = createRadixNode({ type, parent: node });
-      node.children.set(section, childNode);
-      if (type === NODE_TYPES.PLACEHOLDER) {
-        childNode.paramName = section === "*" ? `_${_unnamedPlaceholderCtr++}` : section.slice(1);
-        node.placeholderChildren.push(childNode);
-        isStaticRoute = false;
-      } else if (type === NODE_TYPES.WILDCARD) {
-        node.wildcardChildNode = childNode;
-        childNode.paramName = section.slice(
-          3
-          /* "**:" */
-        ) || "_";
-        isStaticRoute = false;
-      }
-      matchedNodes.push(childNode);
-      node = childNode;
-    }
-  }
-  for (const [depth, node2] of matchedNodes.entries()) {
-    node2.maxDepth = Math.max(matchedNodes.length - depth, node2.maxDepth || 0);
-  }
-  node.data = data;
-  if (isStaticRoute === true) {
-    ctx.staticRoutesMap[path] = node;
-  }
-  return node;
-}
-function remove(ctx, path) {
-  let success = false;
-  const sections = path.split("/");
-  let node = ctx.rootNode;
-  for (const section of sections) {
-    node = node.children.get(section);
-    if (!node) {
-      return success;
-    }
-  }
-  if (node.data) {
-    const lastSection = sections.at(-1) || "";
-    node.data = null;
-    if (Object.keys(node.children).length === 0 && node.parent) {
-      node.parent.children.delete(lastSection);
-      node.parent.wildcardChildNode = null;
-      node.parent.placeholderChildren = [];
-    }
-    success = true;
-  }
-  return success;
-}
-function createRadixNode(options = {}) {
-  return {
-    type: options.type || NODE_TYPES.NORMAL,
-    maxDepth: 0,
-    parent: options.parent || null,
-    children: /* @__PURE__ */ new Map(),
-    data: options.data || null,
-    paramName: options.paramName || null,
-    wildcardChildNode: null,
-    placeholderChildren: []
-  };
-}
-function getNodeType(str) {
-  if (str.startsWith("**")) {
-    return NODE_TYPES.WILDCARD;
-  }
-  if (str[0] === ":" || str === "*") {
-    return NODE_TYPES.PLACEHOLDER;
-  }
-  return NODE_TYPES.NORMAL;
-}
-
-function toRouteMatcher(router) {
-  const table = _routerNodeToTable("", router.ctx.rootNode);
-  return _createMatcher(table, router.ctx.options.strictTrailingSlash);
-}
-function _createMatcher(table, strictTrailingSlash) {
-  return {
-    ctx: { table },
-    matchAll: (path) => _matchRoutes(path, table, strictTrailingSlash)
-  };
-}
-function _createRouteTable() {
-  return {
-    static: /* @__PURE__ */ new Map(),
-    wildcard: /* @__PURE__ */ new Map(),
-    dynamic: /* @__PURE__ */ new Map()
-  };
-}
-function _matchRoutes(path, table, strictTrailingSlash) {
-  if (strictTrailingSlash !== true && path.endsWith("/")) {
-    path = path.slice(0, -1) || "/";
-  }
-  const matches = [];
-  for (const [key, value] of _sortRoutesMap(table.wildcard)) {
-    if (path === key || path.startsWith(key + "/")) {
-      matches.push(value);
-    }
-  }
-  for (const [key, value] of _sortRoutesMap(table.dynamic)) {
-    if (path.startsWith(key + "/")) {
-      const subPath = "/" + path.slice(key.length).split("/").splice(2).join("/");
-      matches.push(..._matchRoutes(subPath, value));
-    }
-  }
-  const staticMatch = table.static.get(path);
-  if (staticMatch) {
-    matches.push(staticMatch);
-  }
-  return matches.filter(Boolean);
-}
-function _sortRoutesMap(m) {
-  return [...m.entries()].sort((a, b) => a[0].length - b[0].length);
-}
-function _routerNodeToTable(initialPath, initialNode) {
-  const table = _createRouteTable();
-  function _addNode(path, node) {
-    if (path) {
-      if (node.type === NODE_TYPES.NORMAL && !(path.includes("*") || path.includes(":"))) {
-        if (node.data) {
-          table.static.set(path, node.data);
-        }
-      } else if (node.type === NODE_TYPES.WILDCARD) {
-        table.wildcard.set(path.replace("/**", ""), node.data);
-      } else if (node.type === NODE_TYPES.PLACEHOLDER) {
-        const subTable = _routerNodeToTable("", node);
-        if (node.data) {
-          subTable.static.set("/", node.data);
-        }
-        table.dynamic.set(path.replace(/\/\*|\/:\w+/, ""), subTable);
-        return;
-      }
-    }
-    for (const [childPath, child] of node.children.entries()) {
-      _addNode(`${path}/${childPath}`.replace("//", "/"), child);
-    }
-  }
-  _addNode(initialPath, initialNode);
-  return table;
-}
-
-const s=globalThis.Headers,i=globalThis.AbortController,l=globalThis.fetch||(()=>{throw new Error("[node-fetch-native] Failed to fetch: `globalThis.fetch` is not available!")});
-
-class FetchError extends Error {
-  constructor(message, opts) {
-    super(message, opts);
-    this.name = "FetchError";
-    if (opts?.cause && !this.cause) {
-      this.cause = opts.cause;
-    }
-  }
-}
-function createFetchError(ctx) {
-  const errorMessage = ctx.error?.message || ctx.error?.toString() || "";
-  const method = ctx.request?.method || ctx.options?.method || "GET";
-  const url = ctx.request?.url || String(ctx.request) || "/";
-  const requestStr = `[${method}] ${JSON.stringify(url)}`;
-  const statusStr = ctx.response ? `${ctx.response.status} ${ctx.response.statusText}` : "<no response>";
-  const message = `${requestStr}: ${statusStr}${errorMessage ? ` ${errorMessage}` : ""}`;
-  const fetchError = new FetchError(
-    message,
-    ctx.error ? { cause: ctx.error } : void 0
-  );
-  for (const key of ["request", "options", "response"]) {
-    Object.defineProperty(fetchError, key, {
-      get() {
-        return ctx[key];
-      }
-    });
-  }
-  for (const [key, refKey] of [
-    ["data", "_data"],
-    ["status", "status"],
-    ["statusCode", "status"],
-    ["statusText", "statusText"],
-    ["statusMessage", "statusText"]
-  ]) {
-    Object.defineProperty(fetchError, key, {
-      get() {
-        return ctx.response && ctx.response[refKey];
-      }
-    });
-  }
-  return fetchError;
-}
-
-const payloadMethods = new Set(
-  Object.freeze(["PATCH", "POST", "PUT", "DELETE"])
-);
-function isPayloadMethod(method = "GET") {
-  return payloadMethods.has(method.toUpperCase());
-}
-function isJSONSerializable(value) {
-  if (value === void 0) {
-    return false;
-  }
-  const t = typeof value;
-  if (t === "string" || t === "number" || t === "boolean" || t === null) {
-    return true;
-  }
-  if (t !== "object") {
-    return false;
-  }
-  if (Array.isArray(value)) {
-    return true;
-  }
-  if (value.buffer) {
-    return false;
-  }
-  return value.constructor && value.constructor.name === "Object" || typeof value.toJSON === "function";
-}
-const textTypes = /* @__PURE__ */ new Set([
-  "image/svg",
-  "application/xml",
-  "application/xhtml",
-  "application/html"
-]);
-const JSON_RE = /^application\/(?:[\w!#$%&*.^`~-]*\+)?json(;.+)?$/i;
-function detectResponseType(_contentType = "") {
-  if (!_contentType) {
-    return "json";
-  }
-  const contentType = _contentType.split(";").shift() || "";
-  if (JSON_RE.test(contentType)) {
-    return "json";
-  }
-  if (textTypes.has(contentType) || contentType.startsWith("text/")) {
-    return "text";
-  }
-  return "blob";
-}
-function resolveFetchOptions(request, input, defaults, Headers) {
-  const headers = mergeHeaders(
-    input?.headers ?? request?.headers,
-    defaults?.headers,
-    Headers
-  );
-  let query;
-  if (defaults?.query || defaults?.params || input?.params || input?.query) {
-    query = {
-      ...defaults?.params,
-      ...defaults?.query,
-      ...input?.params,
-      ...input?.query
-    };
-  }
-  return {
-    ...defaults,
-    ...input,
-    query,
-    params: query,
-    headers
-  };
-}
-function mergeHeaders(input, defaults, Headers) {
-  if (!defaults) {
-    return new Headers(input);
-  }
-  const headers = new Headers(defaults);
-  if (input) {
-    for (const [key, value] of Symbol.iterator in input || Array.isArray(input) ? input : new Headers(input)) {
-      headers.set(key, value);
-    }
-  }
-  return headers;
-}
-async function callHooks(context, hooks) {
-  if (hooks) {
-    if (Array.isArray(hooks)) {
-      for (const hook of hooks) {
-        await hook(context);
-      }
-    } else {
-      await hooks(context);
-    }
-  }
-}
-
-const retryStatusCodes = /* @__PURE__ */ new Set([
-  408,
-  // Request Timeout
-  409,
-  // Conflict
-  425,
-  // Too Early (Experimental)
-  429,
-  // Too Many Requests
-  500,
-  // Internal Server Error
-  502,
-  // Bad Gateway
-  503,
-  // Service Unavailable
-  504
-  // Gateway Timeout
-]);
-const nullBodyResponses = /* @__PURE__ */ new Set([101, 204, 205, 304]);
-function createFetch(globalOptions = {}) {
-  const {
-    fetch = globalThis.fetch,
-    Headers = globalThis.Headers,
-    AbortController = globalThis.AbortController
-  } = globalOptions;
-  async function onError(context) {
-    const isAbort = context.error && context.error.name === "AbortError" && !context.options.timeout || false;
-    if (context.options.retry !== false && !isAbort) {
-      let retries;
-      if (typeof context.options.retry === "number") {
-        retries = context.options.retry;
-      } else {
-        retries = isPayloadMethod(context.options.method) ? 0 : 1;
-      }
-      const responseCode = context.response && context.response.status || 500;
-      if (retries > 0 && (Array.isArray(context.options.retryStatusCodes) ? context.options.retryStatusCodes.includes(responseCode) : retryStatusCodes.has(responseCode))) {
-        const retryDelay = typeof context.options.retryDelay === "function" ? context.options.retryDelay(context) : context.options.retryDelay || 0;
-        if (retryDelay > 0) {
-          await new Promise((resolve) => setTimeout(resolve, retryDelay));
-        }
-        return $fetchRaw(context.request, {
-          ...context.options,
-          retry: retries - 1
-        });
-      }
-    }
-    const error = createFetchError(context);
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(error, $fetchRaw);
-    }
-    throw error;
-  }
-  const $fetchRaw = async function $fetchRaw2(_request, _options = {}) {
-    const context = {
-      request: _request,
-      options: resolveFetchOptions(
-        _request,
-        _options,
-        globalOptions.defaults,
-        Headers
-      ),
-      response: void 0,
-      error: void 0
-    };
-    if (context.options.method) {
-      context.options.method = context.options.method.toUpperCase();
-    }
-    if (context.options.onRequest) {
-      await callHooks(context, context.options.onRequest);
-    }
-    if (typeof context.request === "string") {
-      if (context.options.baseURL) {
-        context.request = withBase(context.request, context.options.baseURL);
-      }
-      if (context.options.query) {
-        context.request = withQuery(context.request, context.options.query);
-        delete context.options.query;
-      }
-      if ("query" in context.options) {
-        delete context.options.query;
-      }
-      if ("params" in context.options) {
-        delete context.options.params;
-      }
-    }
-    if (context.options.body && isPayloadMethod(context.options.method)) {
-      if (isJSONSerializable(context.options.body)) {
-        context.options.body = typeof context.options.body === "string" ? context.options.body : JSON.stringify(context.options.body);
-        context.options.headers = new Headers(context.options.headers || {});
-        if (!context.options.headers.has("content-type")) {
-          context.options.headers.set("content-type", "application/json");
-        }
-        if (!context.options.headers.has("accept")) {
-          context.options.headers.set("accept", "application/json");
-        }
-      } else if (
-        // ReadableStream Body
-        "pipeTo" in context.options.body && typeof context.options.body.pipeTo === "function" || // Node.js Stream Body
-        typeof context.options.body.pipe === "function"
-      ) {
-        if (!("duplex" in context.options)) {
-          context.options.duplex = "half";
-        }
-      }
-    }
-    let abortTimeout;
-    if (!context.options.signal && context.options.timeout) {
-      const controller = new AbortController();
-      abortTimeout = setTimeout(() => {
-        const error = new Error(
-          "[TimeoutError]: The operation was aborted due to timeout"
-        );
-        error.name = "TimeoutError";
-        error.code = 23;
-        controller.abort(error);
-      }, context.options.timeout);
-      context.options.signal = controller.signal;
-    }
-    try {
-      context.response = await fetch(
-        context.request,
-        context.options
-      );
-    } catch (error) {
-      context.error = error;
-      if (context.options.onRequestError) {
-        await callHooks(
-          context,
-          context.options.onRequestError
-        );
-      }
-      return await onError(context);
-    } finally {
-      if (abortTimeout) {
-        clearTimeout(abortTimeout);
-      }
-    }
-    const hasBody = (context.response.body || // https://github.com/unjs/ofetch/issues/324
-    // https://github.com/unjs/ofetch/issues/294
-    // https://github.com/JakeChampion/fetch/issues/1454
-    context.response._bodyInit) && !nullBodyResponses.has(context.response.status) && context.options.method !== "HEAD";
-    if (hasBody) {
-      const responseType = (context.options.parseResponse ? "json" : context.options.responseType) || detectResponseType(context.response.headers.get("content-type") || "");
-      switch (responseType) {
-        case "json": {
-          const data = await context.response.text();
-          const parseFunction = context.options.parseResponse || destr;
-          context.response._data = parseFunction(data);
-          break;
-        }
-        case "stream": {
-          context.response._data = context.response.body || context.response._bodyInit;
-          break;
-        }
-        default: {
-          context.response._data = await context.response[responseType]();
-        }
-      }
-    }
-    if (context.options.onResponse) {
-      await callHooks(
-        context,
-        context.options.onResponse
-      );
-    }
-    if (!context.options.ignoreResponseError && context.response.status >= 400 && context.response.status < 600) {
-      if (context.options.onResponseError) {
-        await callHooks(
-          context,
-          context.options.onResponseError
-        );
-      }
-      return await onError(context);
-    }
-    return context.response;
-  };
-  const $fetch = async function $fetch2(request, options) {
-    const r = await $fetchRaw(request, options);
-    return r._data;
-  };
-  $fetch.raw = $fetchRaw;
-  $fetch.native = (...args) => fetch(...args);
-  $fetch.create = (defaultOptions = {}, customGlobalOptions = {}) => createFetch({
-    ...globalOptions,
-    ...customGlobalOptions,
-    defaults: {
-      ...globalOptions.defaults,
-      ...customGlobalOptions.defaults,
-      ...defaultOptions
-    }
-  });
-  return $fetch;
-}
-
-function createNodeFetch() {
-  const useKeepAlive = JSON.parse(process.env.FETCH_KEEP_ALIVE || "false");
-  if (!useKeepAlive) {
-    return l;
-  }
-  const agentOptions = { keepAlive: true };
-  const httpAgent = new http.Agent(agentOptions);
-  const httpsAgent = new https.Agent(agentOptions);
-  const nodeFetchOptions = {
-    agent(parsedURL) {
-      return parsedURL.protocol === "http:" ? httpAgent : httpsAgent;
-    }
-  };
-  return function nodeFetchWithKeepAlive(input, init) {
-    return l(input, { ...nodeFetchOptions, ...init });
-  };
-}
-const fetch = globalThis.fetch ? (...args) => globalThis.fetch(...args) : createNodeFetch();
-const Headers = globalThis.Headers || s;
-const AbortController = globalThis.AbortController || i;
-const ofetch = createFetch({ fetch, Headers, AbortController });
-const $fetch = ofetch;
-
-function flatHooks(configHooks, hooks = {}, parentName) {
-  for (const key in configHooks) {
-    const subHook = configHooks[key];
-    const name = parentName ? `${parentName}:${key}` : key;
-    if (typeof subHook === "object" && subHook !== null) {
-      flatHooks(subHook, hooks, name);
-    } else if (typeof subHook === "function") {
-      hooks[name] = subHook;
-    }
-  }
-  return hooks;
-}
-const defaultTask = { run: (function_) => function_() };
-const _createTask = () => defaultTask;
-const createTask = typeof console.createTask !== "undefined" ? console.createTask : _createTask;
-function serialTaskCaller(hooks, args) {
-  const name = args.shift();
-  const task = createTask(name);
-  return hooks.reduce(
-    (promise, hookFunction) => promise.then(() => task.run(() => hookFunction(...args))),
-    Promise.resolve()
-  );
-}
-function parallelTaskCaller(hooks, args) {
-  const name = args.shift();
-  const task = createTask(name);
-  return Promise.all(hooks.map((hook) => task.run(() => hook(...args))));
-}
-function callEachWith(callbacks, arg0) {
-  for (const callback of [...callbacks]) {
-    callback(arg0);
-  }
-}
-
-class Hookable {
-  constructor() {
-    this._hooks = {};
-    this._before = void 0;
-    this._after = void 0;
-    this._deprecatedMessages = void 0;
-    this._deprecatedHooks = {};
-    this.hook = this.hook.bind(this);
-    this.callHook = this.callHook.bind(this);
-    this.callHookWith = this.callHookWith.bind(this);
-  }
-  hook(name, function_, options = {}) {
-    if (!name || typeof function_ !== "function") {
-      return () => {
-      };
-    }
-    const originalName = name;
-    let dep;
-    while (this._deprecatedHooks[name]) {
-      dep = this._deprecatedHooks[name];
-      name = dep.to;
-    }
-    if (dep && !options.allowDeprecated) {
-      let message = dep.message;
-      if (!message) {
-        message = `${originalName} hook has been deprecated` + (dep.to ? `, please use ${dep.to}` : "");
-      }
-      if (!this._deprecatedMessages) {
-        this._deprecatedMessages = /* @__PURE__ */ new Set();
-      }
-      if (!this._deprecatedMessages.has(message)) {
-        console.warn(message);
-        this._deprecatedMessages.add(message);
-      }
-    }
-    if (!function_.name) {
-      try {
-        Object.defineProperty(function_, "name", {
-          get: () => "_" + name.replace(/\W+/g, "_") + "_hook_cb",
-          configurable: true
-        });
-      } catch {
-      }
-    }
-    this._hooks[name] = this._hooks[name] || [];
-    this._hooks[name].push(function_);
-    return () => {
-      if (function_) {
-        this.removeHook(name, function_);
-        function_ = void 0;
-      }
-    };
-  }
-  hookOnce(name, function_) {
-    let _unreg;
-    let _function = (...arguments_) => {
-      if (typeof _unreg === "function") {
-        _unreg();
-      }
-      _unreg = void 0;
-      _function = void 0;
-      return function_(...arguments_);
-    };
-    _unreg = this.hook(name, _function);
-    return _unreg;
-  }
-  removeHook(name, function_) {
-    if (this._hooks[name]) {
-      const index = this._hooks[name].indexOf(function_);
-      if (index !== -1) {
-        this._hooks[name].splice(index, 1);
-      }
-      if (this._hooks[name].length === 0) {
-        delete this._hooks[name];
-      }
-    }
-  }
-  deprecateHook(name, deprecated) {
-    this._deprecatedHooks[name] = typeof deprecated === "string" ? { to: deprecated } : deprecated;
-    const _hooks = this._hooks[name] || [];
-    delete this._hooks[name];
-    for (const hook of _hooks) {
-      this.hook(name, hook);
-    }
-  }
-  deprecateHooks(deprecatedHooks) {
-    Object.assign(this._deprecatedHooks, deprecatedHooks);
-    for (const name in deprecatedHooks) {
-      this.deprecateHook(name, deprecatedHooks[name]);
-    }
-  }
-  addHooks(configHooks) {
-    const hooks = flatHooks(configHooks);
-    const removeFns = Object.keys(hooks).map(
-      (key) => this.hook(key, hooks[key])
-    );
-    return () => {
-      for (const unreg of removeFns.splice(0, removeFns.length)) {
-        unreg();
-      }
-    };
-  }
-  removeHooks(configHooks) {
-    const hooks = flatHooks(configHooks);
-    for (const key in hooks) {
-      this.removeHook(key, hooks[key]);
-    }
-  }
-  removeAllHooks() {
-    for (const key in this._hooks) {
-      delete this._hooks[key];
-    }
-  }
-  callHook(name, ...arguments_) {
-    arguments_.unshift(name);
-    return this.callHookWith(serialTaskCaller, name, ...arguments_);
-  }
-  callHookParallel(name, ...arguments_) {
-    arguments_.unshift(name);
-    return this.callHookWith(parallelTaskCaller, name, ...arguments_);
-  }
-  callHookWith(caller, name, ...arguments_) {
-    const event = this._before || this._after ? { name, args: arguments_, context: {} } : void 0;
-    if (this._before) {
-      callEachWith(this._before, event);
-    }
-    const result = caller(
-      name in this._hooks ? [...this._hooks[name]] : [],
-      arguments_
-    );
-    if (result instanceof Promise) {
-      return result.finally(() => {
-        if (this._after && event) {
-          callEachWith(this._after, event);
-        }
-      });
-    }
-    if (this._after && event) {
-      callEachWith(this._after, event);
-    }
-    return result;
-  }
-  beforeEach(function_) {
-    this._before = this._before || [];
-    this._before.push(function_);
-    return () => {
-      if (this._before !== void 0) {
-        const index = this._before.indexOf(function_);
-        if (index !== -1) {
-          this._before.splice(index, 1);
-        }
-      }
-    };
-  }
-  afterEach(function_) {
-    this._after = this._after || [];
-    this._after.push(function_);
-    return () => {
-      if (this._after !== void 0) {
-        const index = this._after.indexOf(function_);
-        if (index !== -1) {
-          this._after.splice(index, 1);
-        }
-      }
-    };
-  }
-}
-function createHooks() {
-  return new Hookable();
-}
-
-function createContext$1(opts = {}) {
-  let currentInstance;
-  let isSingleton = false;
-  const checkConflict = (instance) => {
-    if (currentInstance && currentInstance !== instance) {
-      throw new Error("Context conflict");
-    }
-  };
-  let als;
-  if (opts.asyncContext) {
-    const _AsyncLocalStorage = opts.AsyncLocalStorage || globalThis.AsyncLocalStorage;
-    if (_AsyncLocalStorage) {
-      als = new _AsyncLocalStorage();
-    } else {
-      console.warn("[unctx] `AsyncLocalStorage` is not provided.");
-    }
-  }
-  const _getCurrentInstance = () => {
-    if (als && currentInstance === void 0) {
-      const instance = als.getStore();
-      if (instance !== void 0) {
-        return instance;
-      }
-    }
-    return currentInstance;
-  };
-  return {
-    use: () => {
-      const _instance = _getCurrentInstance();
-      if (_instance === void 0) {
-        throw new Error("Context is not available");
-      }
-      return _instance;
-    },
-    tryUse: () => {
-      return _getCurrentInstance();
-    },
-    set: (instance, replace) => {
-      if (!replace) {
-        checkConflict(instance);
-      }
-      currentInstance = instance;
-      isSingleton = true;
-    },
-    unset: () => {
-      currentInstance = void 0;
-      isSingleton = false;
-    },
-    call: (instance, callback) => {
-      checkConflict(instance);
-      currentInstance = instance;
-      try {
-        return als ? als.run(instance, callback) : callback();
-      } finally {
-        if (!isSingleton) {
-          currentInstance = void 0;
-        }
-      }
-    },
-    async callAsync(instance, callback) {
-      currentInstance = instance;
-      const onRestore = () => {
-        currentInstance = instance;
-      };
-      const onLeave = () => currentInstance === instance ? onRestore : void 0;
-      asyncHandlers$1.add(onLeave);
-      try {
-        const r = als ? als.run(instance, callback) : callback();
-        if (!isSingleton) {
-          currentInstance = void 0;
-        }
-        return await r;
-      } finally {
-        asyncHandlers$1.delete(onLeave);
-      }
-    }
-  };
-}
-function createNamespace$1(defaultOpts = {}) {
-  const contexts = {};
-  return {
-    get(key, opts = {}) {
-      if (!contexts[key]) {
-        contexts[key] = createContext$1({ ...defaultOpts, ...opts });
-      }
-      contexts[key];
-      return contexts[key];
-    }
-  };
-}
-const _globalThis$1 = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
-const globalKey$2 = "__unctx__";
-const defaultNamespace = _globalThis$1[globalKey$2] || (_globalThis$1[globalKey$2] = createNamespace$1());
-const getContext = (key, opts = {}) => defaultNamespace.get(key, opts);
-const asyncHandlersKey$1 = "__unctx_async_handlers__";
-const asyncHandlers$1 = _globalThis$1[asyncHandlersKey$1] || (_globalThis$1[asyncHandlersKey$1] = /* @__PURE__ */ new Set());
 
 if (!globalThis.$fetch) {
   globalThis.$fetch = $fetch.create({
@@ -1305,7 +419,7 @@ function injectHead() {
 async function getRouteRules(url) {
   {
     const _routeRulesMatcher = toRouteMatcher(
-      createRouter({ routes: (/* @__PURE__ */ useRuntimeConfig()).nitro.routeRules })
+      createRouter$1({ routes: (/* @__PURE__ */ useRuntimeConfig()).nitro.routeRules })
     );
     return defu({}, ..._routeRulesMatcher.matchAll(url).reverse());
   }
@@ -1322,14 +436,8 @@ const payloadPlugin = definePayloadPlugin(() => {
     (data) => !shouldHydrate(data) && 1
   );
 });
-const coreComposableNames = [
-  "injectHead"
-];
-({
-  "@unhead/vue": [...coreComposableNames, ...composableNames]
-});
 [CapoPlugin({ track: true })];
-const unhead_emTINs15Av = /* @__PURE__ */ defineNuxtPlugin({
+const unhead_KgADcZ0jPj = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:head",
   enforce: "pre",
   setup(nuxtApp) {
@@ -1485,67 +593,67 @@ const _routes = [
   {
     name: "admin",
     path: "/admin",
-    component: () => import('./index-BW-yfw6Z.mjs')
+    component: () => import('./index-DA5uxAE3.mjs')
   },
   {
     name: "admin-users-edit-id",
     path: "/admin/users/edit/:id()",
-    component: () => import('./_id_-b_z6q1Ln.mjs')
+    component: () => import('./_id_-QpZbfJjv.mjs')
   },
   {
     name: "admin-users",
     path: "/admin/users",
-    component: () => import('./index-zMcSibq1.mjs')
+    component: () => import('./index-Rsg0hjV1.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-nTMIxO0V.mjs')
+    component: () => import('./index-CBgOYAZn.mjs')
   },
   {
     name: "login",
     path: "/login",
-    component: () => import('./index-Bs1Ewxls.mjs')
+    component: () => import('./index-BGHAleEP.mjs')
   },
   {
     name: "login-otp",
     path: "/login/otp",
-    component: () => import('./index-BkDGrXbO.mjs')
+    component: () => import('./index-CLfqNpVX.mjs')
   },
   {
     name: "orderfood",
     path: "/orderfood",
-    component: () => import('./index-BYYxIJ1V.mjs')
+    component: () => import('./index-C5e28AXX.mjs')
   },
   {
     name: "ordershop",
     path: "/ordershop",
-    component: () => import('./index-hWEovNCk.mjs')
+    component: () => import('./index-DDIwApFK.mjs')
   },
   {
     name: "packet",
     path: "/packet",
-    component: () => import('./index-DmBWNvgR.mjs')
+    component: () => import('./index-DewF5DPN.mjs')
   },
   {
     name: "productsale",
     path: "/productsale",
-    component: () => import('./index-CcYbAgjo.mjs')
+    component: () => import('./index-xdODuMpL.mjs')
   },
   {
     name: "profile",
     path: "/profile",
-    component: () => import('./index-BSroZi7A.mjs')
+    component: () => import('./index-DtUKyaqk.mjs')
   },
   {
     name: "recommendedshops",
     path: "/recommendedshops",
-    component: () => import('./index-BC9anEtd.mjs')
+    component: () => import('./index-B6nyypiW.mjs')
   },
   {
     name: "register",
     path: "/register",
-    component: () => import('./index-B34xRUMT.mjs')
+    component: () => import('./index-BxRTk9lQ.mjs')
   }
 ];
 const _wrapIf = (component, props, slots) => {
@@ -1686,7 +794,7 @@ const plugin$1 = /* @__PURE__ */ defineNuxtPlugin({
     const history = ((_a = routerOptions.history) == null ? void 0 : _a.call(routerOptions, routerBase)) ?? createMemoryHistory(routerBase);
     const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
     let startPosition;
-    const router = createRouter$1({
+    const router = createRouter({
       ...routerOptions,
       scrollBehavior: (to, from, savedPosition) => {
         if (from === START_LOCATION) {
@@ -1865,7 +973,7 @@ const prismaClientSingleton = () => {
   return new PrismaClient();
 };
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
-const plugin_j5EN3OSmDV = /* @__PURE__ */ defineNuxtPlugin({
+const plugin_wnHB2iVUV4 = /* @__PURE__ */ defineNuxtPlugin({
   name: "prisma-client",
   enforce: "pre",
   async setup() {
@@ -1891,7 +999,7 @@ const reducers = [
 {
   reducers.push(["Island", (data) => data && (data == null ? void 0 : data.__nuxt_island)]);
 }
-const revive_payload_server_kdGOmaKU68 = /* @__PURE__ */ defineNuxtPlugin({
+const revive_payload_server_eJ33V7gbc6 = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:revive-payload:server",
   setup() {
     for (const [reducer, fn] of reducers) {
@@ -1924,10 +1032,10 @@ const fontawesome_klhsrycjcK = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
 });
 const plugins = [
   payloadPlugin,
-  unhead_emTINs15Av,
+  unhead_KgADcZ0jPj,
   plugin$1,
-  plugin_j5EN3OSmDV,
-  revive_payload_server_kdGOmaKU68,
+  plugin_wnHB2iVUV4,
+  revive_payload_server_eJ33V7gbc6,
   plugin,
   components_plugin_KR1HBZs4kY,
   fontawesome_klhsrycjcK
@@ -2114,8 +1222,8 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-BufauopP.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-CP2w0PDO.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-C_ad9FeI.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-c6D9hdm-.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ statusCode: unref(statusCode), statusMessage: unref(statusMessage), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -2125,7 +1233,7 @@ const _sfc_main$1 = {
 const _sfc_setup$1 = _sfc_main$1.setup;
 _sfc_main$1.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._bc5hl4yumpdvpomf6riqb5zilm/node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
 const _sfc_main = {
@@ -2173,7 +1281,7 @@ const _sfc_main = {
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._bc5hl4yumpdvpomf6riqb5zilm/node_modules/nuxt/dist/app/components/nuxt-root.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-root.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
 let entry;

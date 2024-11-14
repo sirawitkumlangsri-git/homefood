@@ -6,8 +6,8 @@ import { getContext } from "unctx";
 import { sanitizeStatusCode, createError as createError$1 } from "h3";
 import { shouldHydrate, createPinia, setActivePinia } from "pinia";
 import { defu } from "defu";
-import { defineHeadPlugin, composableNames } from "@unhead/shared";
 import { getActiveHead, CapoPlugin } from "unhead";
+import { defineHeadPlugin } from "@unhead/shared";
 import { START_LOCATION, createMemoryHistory, createRouter as createRouter$1, RouterView } from "vue-router";
 import { toRouteMatcher, createRouter } from "radix3";
 import { hasProtocol, isScriptProtocol, joinURL, withQuery } from "ufo";
@@ -435,14 +435,8 @@ const payloadPlugin = definePayloadPlugin(() => {
     (data) => !shouldHydrate(data) && 1
   );
 });
-const coreComposableNames = [
-  "injectHead"
-];
-({
-  "@unhead/vue": [...coreComposableNames, ...composableNames]
-});
 [CapoPlugin({ track: true })];
-const unhead_emTINs15Av = /* @__PURE__ */ defineNuxtPlugin({
+const unhead_KgADcZ0jPj = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:head",
   enforce: "pre",
   setup(nuxtApp) {
@@ -598,67 +592,67 @@ const _routes = [
   {
     name: "admin",
     path: "/admin",
-    component: () => import("./_nuxt/index-BW-yfw6Z.js")
+    component: () => import("./_nuxt/index-DA5uxAE3.js")
   },
   {
     name: "admin-users-edit-id",
     path: "/admin/users/edit/:id()",
-    component: () => import("./_nuxt/_id_-b_z6q1Ln.js")
+    component: () => import("./_nuxt/_id_-QpZbfJjv.js")
   },
   {
     name: "admin-users",
     path: "/admin/users",
-    component: () => import("./_nuxt/index-zMcSibq1.js")
+    component: () => import("./_nuxt/index-Rsg0hjV1.js")
   },
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-nTMIxO0V.js")
+    component: () => import("./_nuxt/index-CBgOYAZn.js")
   },
   {
     name: "login",
     path: "/login",
-    component: () => import("./_nuxt/index-Bs1Ewxls.js")
+    component: () => import("./_nuxt/index-BGHAleEP.js")
   },
   {
     name: "login-otp",
     path: "/login/otp",
-    component: () => import("./_nuxt/index-BkDGrXbO.js")
+    component: () => import("./_nuxt/index-CLfqNpVX.js")
   },
   {
     name: "orderfood",
     path: "/orderfood",
-    component: () => import("./_nuxt/index-BYYxIJ1V.js")
+    component: () => import("./_nuxt/index-C5e28AXX.js")
   },
   {
     name: "ordershop",
     path: "/ordershop",
-    component: () => import("./_nuxt/index-hWEovNCk.js")
+    component: () => import("./_nuxt/index-DDIwApFK.js")
   },
   {
     name: "packet",
     path: "/packet",
-    component: () => import("./_nuxt/index-DmBWNvgR.js")
+    component: () => import("./_nuxt/index-DewF5DPN.js")
   },
   {
     name: "productsale",
     path: "/productsale",
-    component: () => import("./_nuxt/index-CcYbAgjo.js")
+    component: () => import("./_nuxt/index-xdODuMpL.js")
   },
   {
     name: "profile",
     path: "/profile",
-    component: () => import("./_nuxt/index-BSroZi7A.js")
+    component: () => import("./_nuxt/index-DtUKyaqk.js")
   },
   {
     name: "recommendedshops",
     path: "/recommendedshops",
-    component: () => import("./_nuxt/index-BC9anEtd.js")
+    component: () => import("./_nuxt/index-B6nyypiW.js")
   },
   {
     name: "register",
     path: "/register",
-    component: () => import("./_nuxt/index-B34xRUMT.js")
+    component: () => import("./_nuxt/index-BxRTk9lQ.js")
   }
 ];
 const _wrapIf = (component, props, slots) => {
@@ -980,7 +974,7 @@ const prismaClientSingleton = () => {
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 if (process.env.NODE_ENV !== "production")
   globalThis.prismaGlobal = prisma;
-const plugin_j5EN3OSmDV = /* @__PURE__ */ defineNuxtPlugin({
+const plugin_wnHB2iVUV4 = /* @__PURE__ */ defineNuxtPlugin({
   name: "prisma-client",
   enforce: "pre",
   async setup() {
@@ -1006,7 +1000,7 @@ const reducers = [
 {
   reducers.push(["Island", (data) => data && (data == null ? void 0 : data.__nuxt_island)]);
 }
-const revive_payload_server_kdGOmaKU68 = /* @__PURE__ */ defineNuxtPlugin({
+const revive_payload_server_eJ33V7gbc6 = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:revive-payload:server",
   setup() {
     for (const [reducer, fn] of reducers) {
@@ -1039,10 +1033,10 @@ const fontawesome_klhsrycjcK = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
 });
 const plugins = [
   payloadPlugin,
-  unhead_emTINs15Av,
+  unhead_KgADcZ0jPj,
   plugin$1,
-  plugin_j5EN3OSmDV,
-  revive_payload_server_kdGOmaKU68,
+  plugin_wnHB2iVUV4,
+  revive_payload_server_eJ33V7gbc6,
   plugin,
   components_plugin_KR1HBZs4kY,
   fontawesome_klhsrycjcK
@@ -1229,8 +1223,8 @@ const _sfc_main$1 = {
     const statusMessage = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-BufauopP.js"));
-    const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-CP2w0PDO.js"));
+    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-C_ad9FeI.js"));
+    const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-c6D9hdm-.js"));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ statusCode: unref(statusCode), statusMessage: unref(statusMessage), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -1240,7 +1234,7 @@ const _sfc_main$1 = {
 const _sfc_setup$1 = _sfc_main$1.setup;
 _sfc_main$1.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._bc5hl4yumpdvpomf6riqb5zilm/node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-error-page.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
 const _sfc_main = {
@@ -1288,7 +1282,7 @@ const _sfc_main = {
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._bc5hl4yumpdvpomf6riqb5zilm/node_modules/nuxt/dist/app/components/nuxt-root.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("node_modules/nuxt/dist/app/components/nuxt-root.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
 let entry;

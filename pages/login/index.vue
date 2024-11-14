@@ -82,12 +82,6 @@ watch(phone, (newValue) => {
   console.log('phone:', newValue)
 })
 
-const buttonClass = computed(() => {
-  return (phone.value)
-    ? 'bg-[#FF6347]'  // Active color
-    : 'bg-[#FFCFC6]'  // Disabled color
-})
-
 const isButtonDisabled = computed(() => {
   return !(phone.value)
 })
@@ -132,8 +126,8 @@ const isButtonDisabled = computed(() => {
     </div>
 
     <div class="absolute top-[325px] w-[288px] flex flex-col gap-[32px]  h-[181px] ">
-      <button :class="buttonClass" :disabled="isButtonDisabled" @click="login"
-        class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px]">
+      <button @click="login"
+        class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px] bg-[#FF6347]">
         เข้าสู่ระบบ
       </button>
 

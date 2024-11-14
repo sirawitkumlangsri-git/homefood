@@ -1,6 +1,5 @@
-import { d as defineEventHandler, g as getQuery, r as readBody, s as setResponseStatus } from '../../../_/index.mjs';
+import { d as defineEventHandler, g as getQuery, r as readBody, s as setResponseStatus } from '../../../nitro/nitro.mjs';
 import { PrismaClient } from '@prisma/client';
-import '../../../nitro/nitro.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:fs';
