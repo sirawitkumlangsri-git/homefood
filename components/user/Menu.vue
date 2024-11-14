@@ -1,9 +1,12 @@
 <script setup>
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore()
 
 </script>
 
 <template>
-    <div class="bg-[#FFFFFF] mx-2 rounded-md h-[68px] flex gap-5 p-2 shadow-md sm:hidden">
+    <div class="bg-[#FFFFFF] mx-2 rounded-md h-[68px] flex gap-5 p-2 shadow-md w-[350px] sm:block">
         <RouterLink to="/"
             class="w-[50px] h-[50px] rounded-full bg-white flex justify-center items-center hover:bg-[linear-gradient(121.94deg,_#FF6347_0%,_#FF826C_100%)] transition-all duration-300 group hover:-translate-y-1">
             <svg class="w-6 h-6 group-hover:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 24" fill="none">
@@ -89,9 +92,20 @@
 
         </button>
 
-        <button class="w-[50px] h-[50px] rounded-full bg-white overflow-hidden hover:-translate-y-1 transition-all duration-300 group">
-            <img src="/public/photo-user.png" alt="Profile" class="w-full h-full object-cover">
-        </button>
+        <div v-if="authStore.isAuthenticated"
+            class="w-[50px] h-[50px] rounded-full bg-white overflow-hidden hover:-translate-y-1 transition-all duration-300 group">
+            <RouterLink to="/profile">
+                <img alt="Profile" class="w-full h-full object-cover"
+                    :src="authStore.user?.role === 'admin' ? 'https://img5.pic.in.th/file/secure-sv1/software-engineerc1438b6fade78e82.png' : 'https://img2.pic.in.th/pic/volunteer_11077481.png'">
+            </RouterLink>
+        </div>
+        <div v-else class="mt-3 sm:ml-auto mx-1">
+            <RouterLink to="/profile">
+                <font-awesome-icon :icon="['fas', 'user']" class="text-2xl text-orange-400" />
+            </RouterLink>
+        </div>
+
+
     </div>
 </template>
 

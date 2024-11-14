@@ -1,1 +1,0 @@
-import{M as e}from"./8-gYkHr2.js";import{v as o,T as s,z as a,Q as r,t as m}from"./CxOapvV_.js";import".prisma/client/index-browser";const c={class:"mx-auto max-w-7xl mt-5 pb-24"},f={__name:"userLayoutsNoNav",setup(l){return(t,n)=>(m(),o("div",c,[s(t.$slots,"default"),a(r(e),{class:"fixed bottom-5 left-0 right-0 z-50"})]))}};export{f as default};

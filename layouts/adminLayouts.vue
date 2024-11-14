@@ -18,7 +18,6 @@
                         </svg>
                     </button>
 
-                    <!-- Sidebar for Mobile Navigation -->
                     <div v-if="mobileNavOpen" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-40 sm:hidden"
                         @click="toggleMobileNav">
                         <div class="absolute left-0 top-0 h-full w-60 bg-white font-kanit p-2 overflow-auto"
@@ -37,8 +36,6 @@
                                     </RouterLink>
                                 </li>
                             </ul>
-
-                            <!-- ข้อมูลภายในเว็บ -->
 
                             <ul class="menu bg-base-100 rounded-box w-70 mt-2 border-2 -mx-0 border-accent">
                                 <li>
@@ -59,7 +56,6 @@
                                 </li>
                             </ul>
 
-                            <!-- ข้อมูลภายในคลินิค -->
                             <ul class="menu bg-base-100 rounded-box w-70 mt-2 border-2 -mx-0 border-accent">
                                 <li>
                                     <h2 class="menu-title font-light text-zinc-500 text-center text-base">
@@ -74,7 +70,6 @@
                                 </li>
                             </ul>
 
-                            <!-- การตรวจรักษา -->
                             <ul class="menu bg-base-100 rounded-box w-70 mt-2 mb-2 border-2 -mx-0 border-accent">
                                 <li>
                                     <h2 class="menu-title font-light text-zinc-500 text-center text-base">ตรวจรักษา</h2>
@@ -94,7 +89,9 @@
                 </div>
 
                 <div class="flex items-center space-x-4 ">
-
+                    <RouterLink to="/" class="btn btn-secondary btn-sm hidden sm:block">
+                        <p class="text-white font-light mt-2">ไปหน้ายูสเซอร์</p>
+                    </RouterLink>
                     <div class="dropdown dropdown-end">
                         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar online">
                             <div class="w-10 rounded-full">
@@ -104,7 +101,7 @@
                         </div>
                         <ul tabindex="0"
                             class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li>
+                            <li @click="authStore.logout()">
                                 <a class="justify-between">
                                     ออกจากระบบ
                                 </a>
@@ -127,7 +124,7 @@
                             </div>
                         </div>
                         <div class="flex">
-                            <h1 class="mt-2 text-base-200">Role :</h1>
+                            <h1 class="mt-2 text-base-200">Role : {{ authStore.user.role }}</h1>
                         </div>
                     </div>
                     <div class="divider p-2"></div>
@@ -147,7 +144,7 @@
                             <h2 class="menu-title font-light text-zinc-500 text-center text-base">ข้อมูลภายในเว็บ</h2>
                             <ul>
                                 <li>
-                                    <RouterLink to="/admin" class="">
+                                    <RouterLink to="/admin/users" class="">
                                         <font-awesome-icon :icon="['fa', 'user']"
                                             class="text-zinc-500 text-xl mr-2"></font-awesome-icon>
                                         <p class="text-base ">ข้อมูลยูสเซอร์</p>
@@ -199,12 +196,17 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore()
 const mobileNavOpen = ref(false);
 
 
 const toggleMobileNav = () => {
     mobileNavOpen.value = !mobileNavOpen.value;
 };
+
+authStore.initializeAuth()
 </script>
 
 <style scoped>

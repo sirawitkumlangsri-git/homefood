@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     "@prisma/nuxt",
     '@nuxtjs/google-fonts',
+    '@pinia/nuxt',
   ],
   plugins: ['~/plugins/fontawesome.js'],
 })
