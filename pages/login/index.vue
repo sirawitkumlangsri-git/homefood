@@ -6,6 +6,12 @@ import intlTelInput from 'intl-tel-input'
 const phoneInputRef = ref(null)
 const iti = ref(null)
 
+const validateInput = (event) => {
+  // ลบทุกตัวอักษรที่ไม่ใช่ตัวเลข
+  event.target.value = event.target.value.replace(/[^0-9]/g, '')
+  // อัพเดท v-model
+  phone.value = event.target.value
+}
 
 const validateNumber = () => {
   if (!iti.value || !window.intlTelInputUtils) return;
@@ -228,7 +234,7 @@ const goToGoogle = () => {
 </script>
 
 <template>
-  <div class="mx-auto  items-center h-screen overflow-y-auto flex flex-col font-prompt">
+  <div class="mx-auto  items-center flex flex-col font-prompt">
     <div class="absolute top-[78px] w-[288px] h-[177px] flex flex-col gap-[32px] ">
       <h1
         class="h-[33px] px-[8px] gap-[10px] text-[22px] font-extrabold leading-[33.26px] text-transparent bg-clip-text bg-gradient-to-r from-[#FF6347] to-[#FF826C] text-center">
@@ -239,7 +245,7 @@ const goToGoogle = () => {
 
         <div
           class="w-[288px] h-[56px] min-h-[56px] bg-[#1F2A370D] border-[1px] border-[#E9EAEB] rounded-[8px] p-[16px] gap-[12px]">
-          <input v-model="phone" ref="phoneInputRef" type="tel"
+          <input v-model="phone" ref="phoneInputRef" type="tel" pattern="[0-9]*" @input="validateInput"
             class="w-full bg-transparent border-none outline-none font-normal text-[16px] leading-[24.19px] "
             @blur="validateNumber(); logValues()" placeholder="เบอร์โทรศัพท์" />
 
@@ -265,8 +271,8 @@ const goToGoogle = () => {
     </div>
 
     <div class="absolute top-[325px] w-[288px] flex flex-col gap-[32px]  h-[181px] ">
-        <button :class="buttonClass" :disabled="isButtonDisabled" @click="goToGoogle"
-          class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px]">
+      <button :class="buttonClass" :disabled="isButtonDisabled" 
+          class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px] shadow-[0px_4px_12px_0px_#0000000F]">
           เข้าสู่ระบบ
         </button>
 
@@ -276,7 +282,7 @@ const goToGoogle = () => {
         <div class="w-[66.5px] border-[0.5px] border-[#6D6C69]"></div>
       </div>
 
-      <div class="w-[288px] h-[40px] gap-[16px] flex justify-center">
+      <div class="w-[288px] h-[40px] gap-[16px] flex justify-center"> 
         <button class="hover:opacity-80 transition-opacity" @click="goToGoogle">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#D6D6D6" />

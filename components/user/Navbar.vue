@@ -1,7 +1,7 @@
 <script setup>
 
 </script>
-
+ 
 <template>
     <div class="mx-auto font-prompt">
         <div class="bg-white max-w-6xl p-4 flex">

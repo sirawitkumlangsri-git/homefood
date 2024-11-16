@@ -41,12 +41,12 @@ const goToGoogle = () => {
 </script>
 
 <template>
-    <div class="w-full min-h-screen flex items-center justify-center font-prompt">
+    <div class="w-full  flex items-center justify-center font-prompt">
 
         <div class="absolute top-[78px] w-[288px] h-[204px] flex  flex-col gap-[32px]">
             <div class="w-full h-[42px] flex justify-between items-center">
 
-                <div class="w-[42px] h-[42px] min-w-[42px] min-h-[42px] rounded-[22px] flex items-center gap-[10px]">
+                <div class="w-[42px] h-[42px] min-w-[42px] min-h-[42px] rounded-[22px] flex items-center justify-center gap-[10px] shadow-[0px_4px_12px_0px_#0D0A2C0F]">
 
                     <button class="w-[26px] h-[26px] flex justify-center items-center" type="button"
                         aria-label="ย้อนกลับ">
@@ -74,10 +74,10 @@ const goToGoogle = () => {
             </div>
 
             <div class="w-[288px] h-[74px] flex justify-between">
-                <input v-for="(digit, index) in otpInputs" :key="index" v-model="otpInputs[index]" type="text"
+                <input v-for="(digit, index) in otpInputs" :key="index" v-model="otpInputs[index]" type="tel"
                     inputmode="numeric" maxlength="1" @input="handleOtpInput(index, $event)"
                     @keydown="handleKeyDown(index, $event)"
-                    class="w-[45px] h-[74px] rounded-[8px] border border-solid  text-center outline-none flex-shrink-0 font-prompt font-semibold text-[40px] leading-[60.48px]">
+                    class="w-[45px] h-[74px] rounded-[8px] border border-solid bg-[#1F2A370D]  text-center outline-none flex-shrink-0 font-prompt font-semibold text-[40px] leading-[60.48px]">
             </div>
 
 
@@ -115,7 +115,7 @@ const goToGoogle = () => {
         </div>
 
         <button :class="buttonClass" :disabled="isButtonDisabled" @click="goToGoogle"
-            class="absolute top-[496px] w-[288px] h-[53px] rounded-[28px] px-[22px] flex items-center justify-center gap-[14px] text-white font-semibold text-[18px] leading-[27.22px] text-center">
+            class="absolute top-[496px] w-[288px] h-[53px] rounded-[28px] px-[22px] flex items-center justify-center gap-[14px] text-white font-semibold text-[18px] leading-[27.22px] text-center shadow-[0px_4px_12px_0px_#0000000F]">
             ตรวจสอบ
         </button>
 
