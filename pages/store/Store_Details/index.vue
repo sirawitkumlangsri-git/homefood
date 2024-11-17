@@ -4,6 +4,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
 
 <template>
     <storeLayouts>
+        <!-- แถบร้านค้าด้านบน -->
         <div class=" absolute w-[288px] top-[78px]  h-[42px] flex justify-between items-center">
             <button type="button"
                 class="w-[42px] h-[42px] rounded-[22px] flex justify-center items-center gap-[10px] bg-[#FFFFFF1A] shadow-[0px_4px_12px_0px_#0D0A2C0F]">
@@ -28,6 +29,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
 
             </button>
         </div>
+        <!-- ชื่อร้านค้า ปุ่มข้อความ และแจ้งเตือน -->
         <div class="w-[288px] h-[65px] absolute top-[144px]  gap-[8px] flex  items-center">
             <div class="w-[65px] h-[65px] rounded-[50%] overflow-hidden">
                 <img src="https://s3-alpha-sig.figma.com/img/9404/448d/9c80947e0408d3d81f78f309e848d61e?Expires=1732492800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZL~ns6zfLnlB8ZUmRted~URyOJu8G92fMO-pKBSZVPf8dvc0UAdzjCceUKxMbd3nUmPn9AK6wiANIveH4X~aUx9vAKF998xs43YfZKUozmeN~b-Ql2aybd9wAUAd25QXEBsT7glyZ5cBk~vh-w8WdfxRB7HPU3P3JhKC3x8h77x-u~tmjzvvRhr-fSVdiAPkB2po~ETZFpesDXLskkK9djNqRyQVd8hGdPT4NAd491~Yo-FVwfWth024t3XMvX7CtmUzLJG4QsmnAQt1waHxCmZ4K1yytg7-twUeu-P2dlo9J00u6Pvb5vGxKOVBkHx5vga3m~G1h1mxeXDck0lUGQ__"
@@ -39,7 +41,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
                     class="font-prompt text-[18px] font-semibold leading-[27.22px] text-center bg-gradient-to-r from-[#FF6347] to-[#FF826C] text-transparent bg-clip-text whitespace-nowrap overflow-hidden text-ellipsis">ร้านขนมหวานแสนอร่อยมาก</span>
             </div>
 
-            <div
+            <RouterLink to="/"
                 class="relative w-[42px] h-[42px] rounded-[22px] p-[8px] flex justify-center items-center gap-[10px] bg-[#FF96843D]">
                 <svg width="26" height="27" viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -57,7 +59,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
                 </svg>
                 <div class="absolute w-[14px] h-[14px] bg-[#FF6347] border-2 border-white rounded-full -top-1 -right-1">
                 </div>
-            </div>
+            </RouterLink>
             <div
                 class="relative w-[42px] h-[42px] rounded-[22px] p-[8px] flex justify-center items-center gap-[10px] bg-[#FF96843D]">
                 <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,6 +72,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
                 </div>
             </div>
         </div>
+        <!-- ค้นหา -->
         <div
             class="absolute w-[288px] h-[56px] min-[56px] top-[233px] rounded-[8px] border border-solid p-[16px] gap-[12px] flex items-center bg-[#1F2A370D] border-[#E9EAEB]">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -103,6 +106,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
             </svg>
 
         </div>
+        <!-- สถานะร้าน -->
         <div
             class="absolute w-[288px] h-[108px] top-[313px] rounded-[12px] p-[8px] gap-[12px] bg-white shadow-[0px_6px_20px_0px_#0D0A2C1A] flex flex-col">
             <div class="w-[272px] h-[48px] gap-[12px] flex">
@@ -138,9 +142,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
                 </svg>
 
             </div>
-            <svg width="272" height="1" viewBox="0 0 272 1" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line y1="0.5" x2="272" y2="0.5" stroke="#E9EAEB" />
-            </svg>
+            <div class="w-[272px] border-b border-[#E9EAEB]"></div>
             <div class="w-[272px] h-[20px] gap-[12px] flex items-center">
                 <span class="w-[210px] h-[18px] font-prompt font-normal text-[12px] leading-[18.14px]">สถานะร้าน</span>
                 <label class="relative inline-flex items-center cursor-pointer w-[50px] h-[22px]">
@@ -154,6 +156,7 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
                 </label>
             </div>
         </div>
+        <!-- คำสั่ง -->
         <div class="absolute w-[288px] h-[24px] top-[469px]  gap-[10px] flex">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path opacity="0.5"
@@ -177,25 +180,34 @@ import storeLayouts from '@/layouts/storeLayouts.vue'
             </div>
 
         </div>
-        <div class="absolute w-[288px] h-auto top-[513px] flex justify-between ">
+        <div class="absolute w-[288px] h-auto top-[513px] flex flex-wrap gap-y-4 gap-x-4">      
             <div
-                class=" w-[136px] h-[100px] rounded-[16px] bg-gradient-to-b from-[#FFCC70] from-[-16%] to-[#FF826C] to-[100%] flex flex-col items-center  justify-between">
-                <div class=" absolute flex w-full h-[20px] top-[535px] ">
-                    <span
-                        class="absolute w-[92px] h-[20px]   font-prompt font-semibold text-base leading-[24.19px] text-center text-white">คำสั่งซื้อ</span>
+                class="w-[136px] h-[100px] rounded-[16px] bg-gradient-to-b from-[#FFCC70] from-[-16%] to-[#FF826C] to-[100%] flex flex-col items-center justify-between relative">
+                <svg class="absolute top-[-8px] right-[-8px]" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="10" cy="10" r="9" fill="#FF6347" stroke="white" stroke-width="2"/>
+                </svg>
+
+                <div class="w-full h-[20px] mt-[22px] flex justify-center gap-x-[10px]  ">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7.91667 1.66699C7.22631 1.66699 6.66667 2.22664 6.66667 2.91699V3.75033C6.66667 4.44068 7.22631 5.00033 7.91667 5.00033H12.0833C12.7737 5.00033 13.3333 4.44068 13.3333 3.75033V2.91699C13.3333 2.22664 12.7737 1.66699 12.0833 1.66699H7.91667Z"
+                            fill="white" />
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M5.41667 3.36417C4.36841 3.42299 3.70665 3.59002 3.23223 4.06444C2.5 4.79668 2.5 5.97519 2.5 8.33221V13.3322C2.5 15.6892 2.5 16.8677 3.23223 17.6C3.96447 18.3322 5.14298 18.3322 7.5 18.3322H12.5C14.857 18.3322 16.0355 18.3322 16.7678 17.6C17.5 16.8677 17.5 15.6892 17.5 13.3322V8.33221C17.5 5.97519 17.5 4.79668 16.7678 4.06444C16.2933 3.59002 15.6316 3.42299 14.5833 3.36417V3.75033C14.5833 5.13104 13.464 6.25033 12.0833 6.25033H7.91667C6.53595 6.25033 5.41667 5.13104 5.41667 3.75033V3.36417ZM12.9265 10.4572C13.1788 10.2217 13.1924 9.82622 12.9569 9.57388C12.7214 9.32154 12.3259 9.3079 12.0736 9.54342L8.92857 12.4787L7.92645 11.5434C7.67411 11.3079 7.27861 11.3215 7.04309 11.5739C6.80757 11.8262 6.82121 12.2217 7.07355 12.4572L8.50212 13.7906C8.74225 14.0147 9.11489 14.0147 9.35502 13.7906L12.9265 10.4572Z"
+                            fill="white" />
+                    </svg>
+
+                    <span class="font-prompt font-semibold text-base leading-[24.19px] text-white">ออเดอร์ใหม่</span>
+
                 </div>
+                <span
+                    class="w-[102px] h-[34px] font-prompt font-semibold text-[30px] leading-[45.36px] text-center text-white mb-[16px]">10</span>
             </div>
 
-            <div
-                class=" w-[136px] h-[100px] rounded-[16px] bg-gradient-to-b from-[#FFCC70] from-[-16%] to-[#FF826C] to-[100%] flex flex-col items-center  justify-between">
-                <div class=" absolute flex w-full h-[20px] top-[535px] ">
-                    <span
-                        class="absolute w-[92px] h-[20px]   font-prompt font-semibold text-base leading-[24.19px] text-center text-white">คำสั่งซื้อ</span>
-                </div>
-            </div>
-
-            
         </div>
+        
+
+
     </storeLayouts>
 </template>
 

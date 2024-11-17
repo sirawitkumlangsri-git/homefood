@@ -2,12 +2,18 @@
 import { ref, computed, onMounted } from 'vue'
 import 'intl-tel-input/build/css/intlTelInput.css'
 import intlTelInput from 'intl-tel-input'
-
+import { useRouter } from 'vue-router'
+import { loadGoogleAPI, initGoogleClient, handleGoogleLogin } from '~/services/google'
 const phoneInputRef = ref(null)
 const emailInputRef = ref(null)
 const fullNameInputRef = ref(null)
 const iti = ref(null)
+const router = useRouter()
+const phone = ref('')
+const email = ref('')
+const fullName = ref('')
 
+// Google OAuth configuration
 const validateInput = (event) => {
   // ลบทุกตัวอักษรที่ไม่ใช่ตัวเลข
   event.target.value = event.target.value.replace(/[^0-9]/g, '')
@@ -162,9 +168,11 @@ const validateNumber = () => {
   }
 
 
+
+
 }
 
-// เพิ่มฟังก์ชันแปลความหมาย error code
+
 const getErrorMessage = (errorCode) => {
   if (!window.intlTelInputUtils) return 'เบอร์โทรไม่ถูกต้อง';
 
@@ -184,8 +192,8 @@ const getErrorMessage = (errorCode) => {
   }
 }
 
-onMounted(() => {
-  // สร้าง intl-tel-input ก่อน
+onMounted(async () => {
+  // Initialize intl-tel-input
   iti.value = intlTelInput(phoneInputRef.value, {
     initialCountry: 'th',
     preferredCountries: ['th'],
@@ -193,19 +201,31 @@ onMounted(() => {
     formatOnDisplay: true,
     autoFormat: true,
     nationalMode: true,
-    utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.15/build/js/utils.js'
+    loadUtilsOnInit: true, // แทนที่ utilsScript
+    utilsPath: 'https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.15/build/js/utils.js' // เพิ่ม path ของ utils
   });
 
-  // รอให้ utils script โหลดเสร็จ (ไม่ต้องสร้าง intl-tel-input ใหม่)
+  // Wait for utils script
   const waitForUtils = () => {
     if (!window.intlTelInputUtils) {
       setTimeout(waitForUtils, 100);
     }
   };
-
   waitForUtils();
+
+  // Load and initialize Google API
+  try {
+    await loadGoogleAPI();
+    await initGoogleClient(handleGoogleCallback);
+  } catch (error) {
+    console.error('Failed to initialize Google Sign-in:', error);
+  }
+
 })
 
+const goToGoogle = () => {
+  handleGoogleLogin()
+}
 
 const logValues = () => {
   const phone = phoneInputRef.value?.value;
@@ -219,9 +239,7 @@ const logValues = () => {
   });
 }
 
-const phone = ref('')
-const email = ref('')
-const fullName = ref('')
+
 
 // Computed property for button class
 const buttonClass = computed(() => {
@@ -235,9 +253,21 @@ const isButtonDisabled = computed(() => {
   return !(phone.value && email.value && fullName.value)
 })
 
-const goToGoogle = () => {
-    window.location.href = 'https://www.google.com' // Redirect to Google
-
+// Load Google API script
+const handleGoogleCallback = async (response) => {
+  if (response.credential) {
+    try {
+      router.push({
+        path: '/login',
+        query: {
+          credential: response.credential,
+          provider: 'google'
+        }
+      });
+    } catch (error) {
+      console.error('Failed to handle Google callback:', error);
+    }
+  }
 }
 </script>
 
@@ -303,9 +333,9 @@ const goToGoogle = () => {
 
     <div class="absolute top-[488px] w-[288px] flex flex-col gap-[32px]  h-[181px] ">
       <button :class="buttonClass" :disabled="isButtonDisabled"
-          class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px] shadow-[0px_4px_12px_0px_#0000000F]">
-          ลงทะเบียน
-        </button>
+        class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px] shadow-[0px_4px_12px_0px_#0000000F]">
+        ลงทะเบียน
+      </button>
 
       <div class="font-normal h-[24px] text-[16px] leading-[24.19px] text-[#6D6C69] flex items-center justify-between">
         <div class="w-[66.5px] border-[0.5px] border-[#6D6C69]"></div>
@@ -314,7 +344,7 @@ const goToGoogle = () => {
       </div>
 
       <div class="w-[288px] h-[40px] gap-[16px] flex justify-center">
-        <button class="hover:opacity-80 transition-opacity" @click="goToGoogle">
+        <button id="googleButton" class="hover:opacity-80 transition-opacity" @click="handleGoogleLogin()">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#D6D6D6" />
             <path
@@ -371,7 +401,8 @@ const goToGoogle = () => {
     </div>
 
     <div class=" h-[21px] absolute top-[686px] font-light text-[14px] leading-[21.17px] pb-[72px]">
-      ยังไม่มีบัญชี? <a  @click="navigateTo('/login')" class="text-[#FF6347] hover:underline cursor-pointer">เข้าสู่ระบบ</a>
+      ยังไม่มีบัญชี? <a @click="navigateTo('/login')"
+        class="text-[#FF6347] hover:underline cursor-pointer">เข้าสู่ระบบ</a>
     </div>
   </div>
 </template>
@@ -503,5 +534,3 @@ input:focus {
   /* border-color: #6D6C69 !important; */
 }
 </style>
-
-

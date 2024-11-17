@@ -118,6 +118,10 @@ declare module 'nuxt/schema' {
    },
   }
   interface PublicRuntimeConfig {
+   GOOGLE_CLIENT_ID: string,
+
+   GOOGLE_REDIRECT_URI: string,
+
    prisma: {
       log: Array<any>,
 

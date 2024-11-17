@@ -2,7 +2,10 @@
 import { ref, computed, onMounted } from 'vue'
 import 'intl-tel-input/build/css/intlTelInput.css'
 import intlTelInput from 'intl-tel-input'
-
+import { useRoute } from 'vue-router';
+import { fetchGoogleUserInfo} from '~/services/google';
+const route = useRoute();
+const userData = ref(null);
 const phoneInputRef = ref(null)
 const iti = ref(null)
 
@@ -182,8 +185,8 @@ const getErrorMessage = (errorCode) => {
   }
 }
 
-onMounted(() => {
-  // สร้าง intl-tel-input ก่อน
+onMounted(async () => {
+  // Initialize intl-tel-input
   iti.value = intlTelInput(phoneInputRef.value, {
     initialCountry: 'th',
     preferredCountries: ['th'],
@@ -191,18 +194,57 @@ onMounted(() => {
     formatOnDisplay: true,
     autoFormat: true,
     nationalMode: true,
-    utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.15/build/js/utils.js'
+    loadUtilsOnInit: true, // แทนที่ utilsScript
+    utilsPath: 'https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.15/build/js/utils.js' // เพิ่ม path ของ utils
   });
 
-  // รอให้ utils script โหลดเสร็จ (ไม่ต้องสร้าง intl-tel-input ใหม่)
+  // Wait for utils script
   const waitForUtils = () => {
     if (!window.intlTelInputUtils) {
       setTimeout(waitForUtils, 100);
     }
   };
-
   waitForUtils();
-})
+
+  // ดึง access token จาก URL hash
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get('access_token');
+
+  // if (accessToken) {
+  //   try {
+  //     // เรียก Google API เพื่อดึงข้อมูลผู้ใช้
+  //     const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`
+  //       }
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch user info');
+  //     }
+
+  //     const data = await response.json();
+
+  //     // เก็บข้อมูลไว้ใน ref
+  //     userData.value = {
+  //       googleId: data.sub,
+  //       email: data.email,
+  //       picture: data.picture,
+  //       name: data.name,
+  //       givenName: data.given_name,
+  //       familyName: data.family_name
+  //     };
+
+  //     // แสดงใน console
+  //     console.log('Google User Data:', userData.value);
+
+  //   } catch (error) {
+  //     console.error('Error fetching Google user info:', error);
+  //   }
+  // }
+  fetchGoogleUserInfo(accessToken);
+});
 
 
 const logValues = () => {
@@ -228,9 +270,10 @@ const isButtonDisabled = computed(() => {
 })
 
 const goToGoogle = () => {
-    window.location.href = 'https://www.google.com' // Redirect to Google
+  window.location.href = 'https://www.google.com' // Redirect to Google
 
 }
+
 </script>
 
 <template>
@@ -271,10 +314,10 @@ const goToGoogle = () => {
     </div>
 
     <div class="absolute top-[325px] w-[288px] flex flex-col gap-[32px]  h-[181px] ">
-      <button :class="buttonClass" :disabled="isButtonDisabled" 
-          class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px] shadow-[0px_4px_12px_0px_#0000000F]">
-          เข้าสู่ระบบ
-        </button>
+      <button :class="buttonClass" :disabled="isButtonDisabled"
+        class="w-[288px] h-[58px] rounded-[28px] flex items-center justify-center gap-[14px] font-prompt text-white font-semibold text-[18px] leading-[27.22px] shadow-[0px_4px_12px_0px_#0000000F]">
+        เข้าสู่ระบบ
+      </button>
 
       <div class="font-normal h-[24px] text-[16px] leading-[24.19px] text-[#6D6C69] flex items-center justify-between">
         <div class="w-[66.5px] border-[0.5px] border-[#6D6C69]"></div>
@@ -282,7 +325,7 @@ const goToGoogle = () => {
         <div class="w-[66.5px] border-[0.5px] border-[#6D6C69]"></div>
       </div>
 
-      <div class="w-[288px] h-[40px] gap-[16px] flex justify-center"> 
+      <div class="w-[288px] h-[40px] gap-[16px] flex justify-center">
         <button class="hover:opacity-80 transition-opacity" @click="goToGoogle">
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="0.5" y="0.5" width="39" height="39" rx="19.5" stroke="#D6D6D6" />
@@ -340,7 +383,8 @@ const goToGoogle = () => {
     </div>
 
     <div class=" h-[21px] absolute top-[526px] font-light text-[14px] leading-[21.17px] pb-[72px]">
-      ยังไม่มีบัญชี? <a @click="navigateTo('/register')" class="text-[#FF6347] hover:underline cursor-pointer font-semibold">ลงทะเบียน</a>
+      ยังไม่มีบัญชี? <a @click="navigateTo('/register')"
+        class="text-[#FF6347] hover:underline cursor-pointer font-semibold">ลงทะเบียน</a>
     </div>
   </div>
 </template>
@@ -472,5 +516,3 @@ input:focus {
   /* border-color: #6D6C69 !important; */
 }
 </style>
-
-

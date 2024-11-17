@@ -6,6 +6,8 @@ import ProductSale from '~/components/user/ProductSale.vue'
 import Promotion from '~/components/user/Promotion.vue'
 import PromotionSlide from '~/components/user/PromotionSlide.vue'
 import DiscountCoupon from '~/components/user/DiscountCoupon.vue'
+import { ref, computed, onMounted } from 'vue'
+import { fetchGoogleUserInfo} from '~/services/google';
 
 const isDesktop = ref(false)
 
@@ -16,10 +18,16 @@ function handleResize() {
 onMounted(() => {
     handleResize()
     window.addEventListener('resize', handleResize)
+    const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get('access_token');
+
+  fetchGoogleUserInfo(accessToken);
 })
 
 onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
+    
 })
 </script>
 

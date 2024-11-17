@@ -24,4 +24,10 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
   ],
   plugins: ['~/plugins/fontawesome.js'],
+  runtimeConfig: {
+    public: {
+      GOOGLE_CLIENT_ID: process.env.NUXT_GOOGLE_CLIENT_ID,
+      GOOGLE_REDIRECT_URI: process.env.NUXT_GOOGLE_REDIRECT_URI
+    }
+  }
 })
