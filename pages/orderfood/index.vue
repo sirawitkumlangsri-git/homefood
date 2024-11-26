@@ -4,6 +4,8 @@ import Search from '~/components/user/Search'
 import foodCategories from '~/components/user/foodCategories'
 import StoresNear from '~/components/user/StoresNear'
 
+
+
 </script>
 
 <template>

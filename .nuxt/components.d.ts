@@ -2,7 +2,9 @@
 import type { DefineComponent, SlotsType } from 'vue'
 type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refresh: () => Promise<void>}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, SlotsType<{ fallback: { error: unknown } }>>
 interface _GlobalComponents {
-      'UserDiscountCoupon': typeof import("../components/user/DiscountCoupon.vue")['default']
+      'PicSlideShow': typeof import("../components/PicSlideShow.vue")['default']
+    'TextboxWithPhoto': typeof import("../components/TextboxWithPhoto.vue")['default']
+    'UserDiscountCoupon': typeof import("../components/user/DiscountCoupon.vue")['default']
     'UserMenu': typeof import("../components/user/Menu.vue")['default']
     'UserNavbar': typeof import("../components/user/Navbar.vue")['default']
     'UserPacket': typeof import("../components/user/Packet.vue")['default']
@@ -43,7 +45,9 @@ interface _GlobalComponents {
     'Body': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
     'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-      'LazyUserDiscountCoupon': typeof import("../components/user/DiscountCoupon.vue")['default']
+      'LazyPicSlideShow': typeof import("../components/PicSlideShow.vue")['default']
+    'LazyTextboxWithPhoto': typeof import("../components/TextboxWithPhoto.vue")['default']
+    'LazyUserDiscountCoupon': typeof import("../components/user/DiscountCoupon.vue")['default']
     'LazyUserMenu': typeof import("../components/user/Menu.vue")['default']
     'LazyUserNavbar': typeof import("../components/user/Navbar.vue")['default']
     'LazyUserPacket': typeof import("../components/user/Packet.vue")['default']
@@ -90,6 +94,8 @@ declare module 'vue' {
   export interface GlobalComponents extends _GlobalComponents { }
 }
 
+export const PicSlideShow: typeof import("../components/PicSlideShow.vue")['default']
+export const TextboxWithPhoto: typeof import("../components/TextboxWithPhoto.vue")['default']
 export const UserDiscountCoupon: typeof import("../components/user/DiscountCoupon.vue")['default']
 export const UserMenu: typeof import("../components/user/Menu.vue")['default']
 export const UserNavbar: typeof import("../components/user/Navbar.vue")['default']
@@ -131,6 +137,8 @@ export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyPicSlideShow: typeof import("../components/PicSlideShow.vue")['default']
+export const LazyTextboxWithPhoto: typeof import("../components/TextboxWithPhoto.vue")['default']
 export const LazyUserDiscountCoupon: typeof import("../components/user/DiscountCoupon.vue")['default']
 export const LazyUserMenu: typeof import("../components/user/Menu.vue")['default']
 export const LazyUserNavbar: typeof import("../components/user/Navbar.vue")['default']
